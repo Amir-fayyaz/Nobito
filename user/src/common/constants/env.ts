@@ -14,4 +14,7 @@ export const Env = {
 
   //Node
   NODE_ENV: process.env.NODE_ENV,
+
+  //Rabbitmq
+  RABBITMQ_URL: process.env.RABBITMQ_URL,
 };
