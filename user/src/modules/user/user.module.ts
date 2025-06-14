@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Env } from 'src/common/constants/env';
 import { RabbitMQEnviroments } from 'src/common/constants/rabbitmq';
+import { UserController } from './user.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { UserService } from './user.service';
 
 @Module({
   imports: [
@@ -12,13 +16,14 @@ import { RabbitMQEnviroments } from 'src/common/constants/rabbitmq';
         options: {
           urls: [Env.RABBITMQ_URL as string],
           queue: RabbitMQEnviroments.User_Queue,
-          queueOptions: { durable: false },
+          queueOptions: { durable: true },
         },
       },
     ]),
+    TypeOrmModule.forFeature([User]),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [UserController],
+  providers: [UserService],
   exports: [],
 })
 export class UserModule {}
