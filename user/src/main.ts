@@ -20,6 +20,6 @@ async function bootstrap() {
     },
   );
   await app.listen();
-  Logger.log('User-service is listening on rabbit-mq');
+  Logger.log('User-service is listening on rabbit-mq', 'NestLogger');
 }
 bootstrap();
