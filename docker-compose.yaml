@@ -33,6 +33,16 @@ services:
     networks:
       - reservation-system
 
+  redis:
+    image: redis:7
+    container_name: reservation-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+    networks:
+      - reservation-system
+
 volumes:
   rabbitmq_data:
   mysql_data:
