@@ -4,6 +4,8 @@ import { UserService } from './user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { ParseIntPipe } from '@nestjs/common';
+import { UserMessages } from 'src/common/message-patterns/user-messages';
 
 export class UserController {
   constructor(
@@ -12,12 +14,17 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
-  @MessagePattern('get_all_users')
+  @MessagePattern(UserMessages.GETALLUSERS)
   async getAll(@Payload() queryParams: PaginateQuery) {
     try {
       return await this.userService.getAll(queryParams);
     } catch (error) {
       console.log(error.message);
     }
+  }
+
+  @MessagePattern(UserMessages.GETUSER_BY_ID)
+  async findOneById(@Payload() id: number) {
+    return await this.userService.findOneById(id);
   }
 }
