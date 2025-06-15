@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
 
@@ -9,5 +9,10 @@ export class UserController {
   @Get()
   async findAll(@Paginate() query: PaginateQuery) {
     return await this.UserService.findAll(query);
+  }
+
+  @Get(':id')
+  async findOneById(@Param('id', ParseIntPipe) id: number) {
+    return await this.UserService.findOneById(id);
   }
 }
