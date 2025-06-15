@@ -4,27 +4,27 @@ import { Column, Entity, Unique } from 'typeorm';
 @Entity()
 @Unique(['email', 'phone'])
 export class User extends Base {
-  @Column()
+  @Column({ nullable: true })
   firstname: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastname: string;
 
-  @Column({ length: 11 })
+  @Column({ nullable: true })
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
-  @Column({ length: 10 })
+  @Column({ nullable: true })
   nationalCode: string;
 
-  @Column()
+  @Column({ nullable: true })
   avatar: string;
 
-  @Column()
+  @Column({ nullable: true })
   fathername: string;
 }
