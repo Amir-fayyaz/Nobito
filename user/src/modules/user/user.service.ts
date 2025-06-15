@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
   async getAll(params: PaginateQuery) {
     return paginate(params, this.userRepository, {
       sortableColumns: ['createdAt'],
@@ -31,5 +32,11 @@ export class UserService {
         email: [FilterOperator.EQ],
       },
     });
+  }
+
+  async findOneById(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    return user;
   }
 }
