@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { PaginateQuery } from 'nestjs-paginate';
@@ -24,5 +29,15 @@ export class UserService {
     } catch (error) {
       console.log(error.message);
     }
+  }
+
+  async findOneById(id: number) {
+    const res = await lastValueFrom(
+      this.userClient.send(UserMessagePattern.GET_USER_BY_ID, { id }),
+    );
+
+    if (!res) throw new NotFoundException();
+
+    return res;
   }
 }
