@@ -27,4 +27,7 @@ export class User extends Base {
 
   @Column({ nullable: true })
   fathername: string;
+
+  @Column('boolean', { default: false })
+  isVerified: boolean;
 }
