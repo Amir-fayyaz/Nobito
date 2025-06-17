@@ -6,14 +6,15 @@ import { Cache } from 'cache-manager';
 export class CacheService {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-  async set(key: string, data: any, ttl: number) {
+  async set(key: string, data: any, ttl: number): Promise<void> {
     await this.cacheManager.set(key, data, ttl);
-
-    return { success: true };
   }
 
-  async del(key: string) {
+  async del(key: string): Promise<void> {
     await this.cacheManager.del(key);
-    return { success: true };
+  }
+
+  async get(key: string): Promise<any> {
+    return await this.cacheManager.get(key);
   }
 }
