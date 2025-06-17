@@ -23,6 +23,7 @@ export class AuthService {
     return {
       otp,
       hashedOtp,
+      status: 200,
     };
   }
 }
