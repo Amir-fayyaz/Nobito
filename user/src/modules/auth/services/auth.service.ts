@@ -13,8 +13,8 @@ export class AuthService {
     private readonly otpService: OtpService,
   ) {}
 
-  async registerByPhone({ phone }: RegisterByPhoneType) {
-    const user = await this.userRepository.findOneBy({ phone });
+  async registerByPhone(data: RegisterByPhoneType) {
+    const user = await this.userRepository.findOneBy({ phone: data.phone });
 
     if (user) return { status: 409 };
 
