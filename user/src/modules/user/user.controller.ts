@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ParseIntPipe } from '@nestjs/common';
 import { UserMessages } from 'src/common/message-patterns/user-messages';
+import { CreateUserType } from './types/create-user.type';
 
 export class UserController {
   constructor(
@@ -26,5 +27,10 @@ export class UserController {
   @MessagePattern(UserMessages.GETUSER_BY_ID)
   async findOneById(@Payload() id: number) {
     return await this.userService.findOneById(id);
+  }
+
+  @MessagePattern(UserMessages.CREATE_USER)
+  async create(@Payload() data: CreateUserType) {
+    return await this.userService.create(data);
   }
 }
