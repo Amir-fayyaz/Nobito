@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterOperator, paginate, PaginateQuery } from 'nestjs-paginate';
+import { CreateUserType } from './types/create-user.type';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class UserService {
@@ -38,5 +39,12 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { id } });
 
     return user;
+  }
+
+  async create(dto: CreateUserType) {
+    const newUser = this.userRepository.create(dto);
+    const savedUser = await this.userRepository.save(newUser);
+
+    return savedUser;
   }
 }
