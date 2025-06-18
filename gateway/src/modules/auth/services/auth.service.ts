@@ -14,6 +14,7 @@ import { RegisterByPhonePayload } from '../types/auth/registerByPhone-response.t
 import { CacheService } from 'src/common/services/cache.service';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { RegisterByEmail } from '../dto/register-by-email.dto';
+import { VerifyByEmail } from '../dto/verify-by-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -60,6 +61,7 @@ export class AuthService {
     const token: string = await lastValueFrom(
       this.userClient.send(AuthMessagePattern.VERIFY_BY_PHONE, { phone }),
     );
+    await this.cacheService.del(`otp:${phone}`);
 
     return {
       access_token: token,
@@ -83,5 +85,18 @@ export class AuthService {
     return {
       otp: res.otp,
     };
+  }
+
+  async verifyByEmail({ email, otp }: VerifyByEmail) {
+    const isOtpSent = await this.cacheService.get(`otp:${email}`);
+
+    if (!isOtpSent) throw new BadRequestException('You didnt get otp code !');
+
+    if (isOtpSent !== otp) throw new BadRequestException('Wrong otp !');
+
+    await this.cacheService.del(`otp:${email}`);
+    return await lastValueFrom(
+      this.userClient.send(AuthMessagePattern.VERIFY_BY_EMAIL, { email }),
+    );
   }
 }
