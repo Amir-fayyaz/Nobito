@@ -8,6 +8,7 @@ import { VerifyByPhone } from '../dto/verifyByPhone.type';
 import { UserService } from 'src/modules/user/user.service';
 import { JwtAppService } from './jwt.service';
 import { Roles } from 'src/common/enum/role';
+import { RegisterByEmail } from '../dto/registerByEmail.type';
 
 @Injectable()
 export class AuthService {
@@ -43,6 +44,20 @@ export class AuthService {
     return {
       status: 201,
       token,
+    };
+  }
+
+  async registerByEmail({ email }: RegisterByEmail) {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (user) return { status: 409, message: 'Conflict error !' };
+
+    const { hashedOtp, otp } = await this.otpService.generateAndSend();
+
+    return {
+      otp,
+      hashedOtp,
+      status: 200,
     };
   }
 }
