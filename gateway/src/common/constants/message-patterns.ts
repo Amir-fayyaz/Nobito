@@ -13,4 +13,5 @@ export enum AuthMessagePattern {
 
 export enum RoleMessagePattern {
   CREATE_ROLE = 'create_role',
+  GET_ALL_ROLES = 'find_all_roles',
 }
