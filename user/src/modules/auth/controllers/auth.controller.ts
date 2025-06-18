@@ -7,6 +7,7 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { VerifyByPhone } from '../dto/verifyByPhone.type';
 import { RegisterByEmail } from '../dto/registerByEmail.type';
+import { VerifyByEmail } from '../dto/verify-by-email.type';
 
 export class AuthController {
   constructor(
@@ -28,5 +29,10 @@ export class AuthController {
   @MessagePattern(AuthMessages.REGISTER_BY_EMAIL)
   async registerByEmail(@Payload() data: RegisterByEmail) {
     return await this.AuthService.registerByEmail(data);
+  }
+
+  @MessagePattern(AuthMessages.VERIFY_BY_EMAIL)
+  async verifyByEmail(@Payload() data: VerifyByEmail) {
+    return await this.AuthService.verfiyByEmail(data);
   }
 }
