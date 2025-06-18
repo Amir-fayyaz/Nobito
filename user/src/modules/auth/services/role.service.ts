@@ -21,4 +21,8 @@ export class RoleService {
     const newRole = this.roleRepository.create(dto);
     return await this.roleRepository.save(newRole);
   }
+
+  async findAll(): Promise<Role[]> {
+    return await this.roleRepository.find();
+  }
 }
