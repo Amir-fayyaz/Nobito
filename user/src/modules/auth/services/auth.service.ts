@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { RegisterByPhoneType } from '../dto/registerByPhone.type';
 import { OtpService } from './otp.service';
+import { VerifyByPhone } from '../dto/verifyByPhone.type';
+import { UserService } from 'src/modules/user/user.service';
+import { JwtAppService } from './jwt.service';
+import { Roles } from 'src/common/enum/role';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +15,8 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly otpService: OtpService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtAppService,
   ) {}
 
   async registerByPhone(data: RegisterByPhoneType) {
@@ -24,6 +30,19 @@ export class AuthService {
       otp,
       hashedOtp,
       status: 200,
+    };
+  }
+
+  async verifyByPhone(data: VerifyByPhone) {
+    const newUser: DeepPartial<User> = await this.userService.create(data);
+    const token: string = await this.jwtService.generateToken({
+      sub: newUser.id as number,
+      role: Roles.USER,
+    });
+
+    return {
+      status: 201,
+      token,
     };
   }
 }
