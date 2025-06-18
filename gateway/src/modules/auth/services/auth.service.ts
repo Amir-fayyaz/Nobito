@@ -13,6 +13,7 @@ import { AuthMessagePattern } from 'src/common/constants/message-patterns';
 import { RegisterByPhonePayload } from '../types/auth/registerByPhone-response.type';
 import { CacheService } from 'src/common/services/cache.service';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
+import { RegisterByEmail } from '../dto/register-by-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -62,6 +63,25 @@ export class AuthService {
 
     return {
       access_token: token,
+    };
+  }
+
+  async registerByEmail({ email }: RegisterByEmail) {
+    const cache = await this.cacheService.get(`otp:${email}`);
+
+    if (cache) return { otp: cache };
+
+    const res = await lastValueFrom(
+      this.userClient.send(AuthMessagePattern.REGISTER_BY_EMAIL, { email }),
+    );
+
+    if (res.status === 409) throw new ConflictException();
+
+    await this.cacheService.set(`otp:${email}`, res.otp, 120 * 1000);
+
+    //using otp service...
+    return {
+      otp: res.otp,
     };
   }
 }
