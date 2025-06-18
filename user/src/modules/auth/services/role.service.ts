@@ -11,7 +11,13 @@ export class RoleService {
     private readonly roleRepository: Repository<Role>,
   ) {}
 
-  async create(dto: CreateRole): Promise<Role> {
+  async create(dto: CreateRole): Promise<Role | { status: number }> {
+    const role = await this.roleRepository.findOne({
+      where: { name: dto.name },
+    });
+
+    // has conflict ?
+    if (role) return { status: 409 };
     const newRole = this.roleRepository.create(dto);
     return await this.roleRepository.save(newRole);
   }
