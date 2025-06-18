@@ -5,6 +5,8 @@ import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { CacheService } from 'src/common/services/cache.service';
+import { RoleService } from './services/role.service';
+import { RoleController } from './controllers/role.controller';
 
 @Module({
   imports: [
@@ -20,8 +22,8 @@ import { CacheService } from 'src/common/services/cache.service';
       },
     ]),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, CacheService, CacheService],
+  controllers: [AuthController, RoleController],
+  providers: [AuthService, CacheService, RoleService],
   exports: [],
 })
 export class AuthModule {}
