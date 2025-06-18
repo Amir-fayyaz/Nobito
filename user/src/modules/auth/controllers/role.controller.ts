@@ -16,4 +16,9 @@ export class RoleController {
   async create(@Payload() dto: CreateRole) {
     return await this.roleService.create(dto);
   }
+
+  @MessagePattern(RoleMessage.GET_ALL_ROLES)
+  async findAll() {
+    return await this.roleService.findAll();
+  }
 }
