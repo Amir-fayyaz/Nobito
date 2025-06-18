@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { RegisterByPhone } from '../dto/register-by-phone.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { RegisterByEmail } from '../dto/register-by-email.dto';
+import { VerifyByEmail } from '../dto/verify-by-email.dto';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -21,5 +22,10 @@ export class AuthController {
   @Post('register_by_email')
   async registerByEmail(@Body() dto: RegisterByEmail) {
     return await this.AuthService.registerByEmail(dto);
+  }
+
+  @Post('verify_by_email')
+  async verifyByEmail(@Body() dto: VerifyByEmail) {
+    return await this.AuthService.verifyByEmail(dto);
   }
 }
