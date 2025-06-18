@@ -23,4 +23,10 @@ export class RoleService {
       role: newRole,
     };
   }
+
+  async findAll() {
+    return await lastValueFrom(
+      this.userClient.send(RoleMessagePattern.GET_ALL_ROLES, {}),
+    );
+  }
 }
