@@ -10,3 +10,7 @@ export enum AuthMessagePattern {
   REGISTER_BY_EMAIL = 'register_by_email',
   VERIFY_BY_EMAIL = 'verify_by_email',
 }
+
+export enum RoleMessagePattern {
+  CREATE_ROLE = 'create_role',
+}
