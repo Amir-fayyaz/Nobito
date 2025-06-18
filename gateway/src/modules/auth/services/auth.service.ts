@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -10,9 +11,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { AuthMessagePattern } from 'src/common/constants/message-patterns';
 import { RegisterByPhonePayload } from '../types/auth/registerByPhone-response.type';
-// import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { CacheService } from 'src/common/services/cache.service';
+import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,5 +44,24 @@ export class AuthService {
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
+  }
+
+  async verifyByPhone({ phone, otp }: VerifyByPhoneDto) {
+    const isOtpSent = await this.cacheService.get(`otp:${phone}`);
+
+    if (!isOtpSent) {
+      throw new BadRequestException('You did not get otp code !');
+    }
+
+    console.log(isOtpSent, otp);
+    if (isOtpSent !== otp) throw new BadRequestException('Wrong otp');
+
+    const token: string = await lastValueFrom(
+      this.userClient.send(AuthMessagePattern.VERIFY_BY_PHONE, { phone }),
+    );
+
+    return {
+      access_token: token,
+    };
   }
 }
