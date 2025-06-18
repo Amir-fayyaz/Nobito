@@ -9,6 +9,7 @@ import { UserService } from 'src/modules/user/user.service';
 import { JwtAppService } from './jwt.service';
 import { Roles } from 'src/common/enum/role';
 import { RegisterByEmail } from '../dto/registerByEmail.type';
+import { VerifyByEmail } from '../dto/verify-by-email.type';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,9 @@ export class AuthService {
   ) {}
 
   async registerByPhone(data: RegisterByPhoneType) {
-    const user = await this.userRepository.findOneBy({ phone: data.phone });
+    const user = await this.userRepository.findOneBy({
+      phone: data.phone,
+    });
 
     if (user) return { status: 409 };
 
@@ -58,6 +61,20 @@ export class AuthService {
       otp,
       hashedOtp,
       status: 200,
+    };
+  }
+
+  async verfiyByEmail(data: VerifyByEmail) {
+    const newUser: DeepPartial<User> = await this.userService.create(data);
+
+    const token: string = await this.jwtService.generateToken({
+      sub: newUser.id as number,
+      role: Roles.USER,
+    });
+
+    return {
+      status: 201,
+      access_token: token,
     };
   }
 }
