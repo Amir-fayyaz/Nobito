@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreateRoleDto } from '../dto/create-role.dto';
@@ -28,5 +33,15 @@ export class RoleService {
     return await lastValueFrom(
       this.userClient.send(RoleMessagePattern.GET_ALL_ROLES, {}),
     );
+  }
+
+  async findOne(id: number) {
+    const role = await lastValueFrom(
+      this.userClient.send(RoleMessagePattern.FIND_ROLE_BY_ID, { id }),
+    );
+
+    if (role.status === 404) throw new NotFoundException('role not found');
+
+    return role;
   }
 }
