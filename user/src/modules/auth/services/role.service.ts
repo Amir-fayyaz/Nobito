@@ -25,4 +25,12 @@ export class RoleService {
   async findAll(): Promise<Role[]> {
     return await this.roleRepository.find();
   }
+
+  async findOne(id: number) {
+    const role = await this.roleRepository.findOne({ where: { id } });
+
+    if (!role) return { status: 404 };
+
+    return role;
+  }
 }
