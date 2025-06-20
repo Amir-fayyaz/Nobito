@@ -3,8 +3,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function Swagger(app: INestApplication) {
   const configs = new DocumentBuilder()
-    .setTitle('snapp-food')
-    .setDescription('snapp-food api version 1')
+    .setTitle('Nobito')
+    .setDescription('Nobito api version 1')
     .setVersion('1.0')
     .addBearerAuth(
       {
