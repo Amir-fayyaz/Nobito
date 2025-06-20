@@ -9,6 +9,7 @@ import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreateRoleDto } from '../dto/create-role.dto';
 import { lastValueFrom } from 'rxjs';
 import { RoleMessagePattern } from 'src/common/constants/message-patterns';
+import { UpdateRoleDto } from '../dto/update-role.dto';
 
 @Injectable()
 export class RoleService {
@@ -43,5 +44,17 @@ export class RoleService {
     if (role.status === 404) throw new NotFoundException('role not found');
 
     return role;
+  }
+
+  async update(dto: UpdateRoleDto, id: number) {
+    const updateResult = await lastValueFrom(
+      this.userClient.send(RoleMessagePattern.UPDATE_ROLE, { ...dto, id }),
+    );
+
+    if (updateResult.status === 409) throw new ConflictException();
+
+    return {
+      message: 'updated-successfully',
+    };
   }
 }
