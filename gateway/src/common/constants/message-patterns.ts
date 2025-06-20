@@ -26,3 +26,7 @@ export enum PositionMessagePattern {
   UPDATE_POSITION = 'update_position',
   DELETE_POSITION = 'delete_position',
 }
+
+export enum JwtMessagePattern {
+  VERIFY_TOKEN = 'verify_token',
+}
