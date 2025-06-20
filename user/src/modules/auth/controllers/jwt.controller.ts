@@ -1,4 +1,7 @@
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/modules/user/entities/user.entity';
+import { Repository } from 'typeorm';
 import { JwtAppService } from '../services/jwt.service';
 
 export enum JwtMessagePatterns {
@@ -10,10 +13,14 @@ export interface VerifyTokenPayload {
 }
 
 export class JwtController {
-  constructor(private readonly JwtService: JwtAppService) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly repo: Repository<User>,
+    private readonly jwtService: JwtAppService,
+  ) {}
 
   @MessagePattern(JwtMessagePatterns.VERIFY_TOKEN)
   async verifyToken(@Payload() { token }: VerifyTokenPayload) {
-    return await this.JwtService.verifyToken(token);
+    return await this.jwtService.verifyToken(token);
   }
 }
