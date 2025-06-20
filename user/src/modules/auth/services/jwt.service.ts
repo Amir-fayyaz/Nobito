@@ -16,7 +16,9 @@ export class JwtAppService {
     });
   }
 
-  async verifyToken(token: string): Promise<JwtPayload> {
+  async verifyToken(
+    token: string,
+  ): Promise<JwtPayload | { status: number; message: string }> {
     try {
       const payload: JwtPayload = await this.JwtService.verifyAsync(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
@@ -24,7 +26,7 @@ export class JwtAppService {
 
       return payload;
     } catch (error) {
-      throw new UnauthorizedException(error.message);
+      return { status: 401, message: error.message };
     }
   }
 }
