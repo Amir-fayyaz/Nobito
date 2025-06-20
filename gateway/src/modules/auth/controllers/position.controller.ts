@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { PositionService } from '../services/position.service';
 import { CreatePositionDto } from '../dto/create-position.dto';
 
@@ -14,5 +21,10 @@ export class PositionController {
   @Get()
   async findAll() {
     return await this.PositionService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.PositionService.findOne(id);
   }
 }

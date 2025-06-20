@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreatePositionDto } from '../dto/create-position.dto';
@@ -28,5 +33,15 @@ export class PositionService {
     return await lastValueFrom(
       this.userClient.send(PositionMessagePattern.GET_ALL_POSITIONS, {}),
     );
+  }
+
+  async findOne(id: number) {
+    const position = await lastValueFrom(
+      this.userClient.send(PositionMessagePattern.FIND_ONE_BY_ID, { id }),
+    );
+
+    if (position.status === 404) throw new NotFoundException();
+
+    return position;
   }
 }
