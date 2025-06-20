@@ -13,10 +13,16 @@ import { Role } from './entities/role.entity';
 import { PositionController } from './controllers/position.controller';
 import { PositionService } from './services/position.service';
 import { Position } from './entities/position.entity';
+import { JwtController } from './controllers/jwt.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Role, Position])],
-  controllers: [AuthController, RoleController, PositionController],
+  controllers: [
+    AuthController,
+    RoleController,
+    PositionController,
+    JwtController,
+  ],
   providers: [
     AuthService,
     OtpService,
