@@ -21,6 +21,10 @@ export class PositionService {
     return await this.positionRepository.save(newPosition);
   }
 
+  async findAll(): Promise<Position[]> {
+    return await this.positionRepository.find();
+  }
+
   private async hasConflict(name: string): Promise<boolean> {
     return !!(await this.positionRepository.existsBy({ name }));
   }

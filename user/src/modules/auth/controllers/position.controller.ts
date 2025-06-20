@@ -17,4 +17,9 @@ export class PositionController {
   async create(@Payload() dto: CreatePositon) {
     return await this.positionService.create(dto);
   }
+
+  @MessagePattern(PositionMessage.GET_ALL_POSITIONS)
+  async findAll() {
+    return await this.positionService.findAll();
+  }
 }
