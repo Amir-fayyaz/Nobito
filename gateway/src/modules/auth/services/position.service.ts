@@ -58,4 +58,14 @@ export class PositionService {
 
     return updatedResult;
   }
+
+  async remove(id: number) {
+    const deleteResult = await lastValueFrom(
+      this.userClient.send(PositionMessagePattern.DELETE_POSITION, { id }),
+    );
+
+    if (deleteResult.status === 404) throw new NotFoundException();
+
+    return deleteResult;
+  }
 }

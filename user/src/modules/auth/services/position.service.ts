@@ -58,6 +58,16 @@ export class PositionService {
     };
   }
 
+  async remove(id: number) {
+    const deleteResult = await this.positionRepository.delete({ id });
+
+    if (deleteResult.affected === 0) return { status: 404 };
+
+    return {
+      message: `Position with id ${id} removed successfully`,
+    };
+  }
+
   private async hasConflict(name: string): Promise<boolean> {
     return !!(await this.positionRepository.existsBy({ name }));
   }
