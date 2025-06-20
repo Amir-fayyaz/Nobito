@@ -44,4 +44,18 @@ export class PositionService {
 
     return position;
   }
+
+  async update(dto: any, id: number) {
+    const updatedResult = await lastValueFrom(
+      this.userClient.send(PositionMessagePattern.UPDATE_POSITION, {
+        ...dto,
+        id,
+      }),
+    );
+
+    if (updatedResult.status === 409) throw new ConflictException();
+    if (updatedResult.status === 404) throw new NotFoundException();
+
+    return updatedResult;
+  }
 }
