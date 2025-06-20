@@ -57,4 +57,16 @@ export class RoleService {
       message: 'updated-successfully',
     };
   }
+
+  async remove(id: number) {
+    const deleteResult = await lastValueFrom(
+      this.userClient.send(RoleMessagePattern.DELETE_ROLE, { id }),
+    );
+
+    if (deleteResult.status === 404) throw new NotFoundException();
+
+    return {
+      message: 'deleted-successfully',
+    };
+  }
 }
