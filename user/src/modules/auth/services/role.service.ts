@@ -50,6 +50,12 @@ export class RoleService {
     return { status: 200 };
   }
 
+  async remove(id: number) {
+    return (await this.roleRepository.delete({ id })).affected === 0
+      ? { status: 404 }
+      : { status: 200 };
+  }
+
   private async hasConflict(name: string, id: number): Promise<boolean> {
     const role = await this.roleRepository.findOne({ where: { name } });
 
