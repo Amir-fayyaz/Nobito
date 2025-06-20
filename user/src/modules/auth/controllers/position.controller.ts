@@ -6,6 +6,7 @@ import { PositionService } from '../services/position.service';
 import { PositionMessage } from 'src/common/message-patterns/position-messages';
 import { CreatePositon } from '../dto/create-position.type';
 import { FindById } from '../dto/fine-one-by-id.type';
+import { UpdatePosition } from '../dto/update-position.type';
 
 export class PositionController {
   constructor(
@@ -27,5 +28,10 @@ export class PositionController {
   @MessagePattern(PositionMessage.FIND_ONE_BY_ID)
   async findOne(@Payload() { id }: FindById) {
     return await this.positionService.findOne(id);
+  }
+
+  @MessagePattern(PositionMessage.UPDATE_POSITION)
+  async update(@Payload() dto: UpdatePosition) {
+    return await this.positionService.update(dto);
   }
 }
