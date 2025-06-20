@@ -25,6 +25,14 @@ export class PositionService {
     return await this.positionRepository.find();
   }
 
+  async findOne(id: number): Promise<Position | { status: number }> {
+    const position = await this.positionRepository.findOne({ where: { id } });
+
+    if (!position) return { status: 404 };
+
+    return position;
+  }
+
   private async hasConflict(name: string): Promise<boolean> {
     return !!(await this.positionRepository.existsBy({ name }));
   }

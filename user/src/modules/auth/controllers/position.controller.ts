@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { PositionService } from '../services/position.service';
 import { PositionMessage } from 'src/common/message-patterns/position-messages';
 import { CreatePositon } from '../dto/create-position.type';
+import { FindById } from '../dto/fine-one-by-id.type';
 
 export class PositionController {
   constructor(
@@ -21,5 +22,10 @@ export class PositionController {
   @MessagePattern(PositionMessage.GET_ALL_POSITIONS)
   async findAll() {
     return await this.positionService.findAll();
+  }
+
+  @MessagePattern(PositionMessage.FIND_ONE_BY_ID)
+  async findOne(@Payload() { id }: FindById) {
+    return await this.positionService.findOne(id);
   }
 }
