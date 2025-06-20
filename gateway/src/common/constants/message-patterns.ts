@@ -21,4 +21,5 @@ export enum RoleMessagePattern {
 
 export enum PositionMessagePattern {
   CREATE_POSITION = 'create_position',
+  GET_ALL_POSITIONS = 'get_all_position',
 }

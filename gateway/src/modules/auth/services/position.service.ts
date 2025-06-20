@@ -23,4 +23,10 @@ export class PositionService {
       position: createResult,
     };
   }
+
+  async findAll() {
+    return await lastValueFrom(
+      this.userClient.send(PositionMessagePattern.GET_ALL_POSITIONS, {}),
+    );
+  }
 }
