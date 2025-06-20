@@ -7,6 +7,7 @@ import { PositionMessage } from 'src/common/message-patterns/position-messages';
 import { CreatePositon } from '../dto/create-position.type';
 import { FindById } from '../dto/fine-one-by-id.type';
 import { UpdatePosition } from '../dto/update-position.type';
+import { RemovePosition } from '../dto/remove-position.type';
 
 export class PositionController {
   constructor(
@@ -33,5 +34,10 @@ export class PositionController {
   @MessagePattern(PositionMessage.UPDATE_POSITION)
   async update(@Payload() dto: UpdatePosition) {
     return await this.positionService.update(dto);
+  }
+
+  @MessagePattern(PositionMessage.DELETE_POSITION)
+  async remove(@Payload() { id }: RemovePosition) {
+    return await this.positionService.remove(id);
   }
 }

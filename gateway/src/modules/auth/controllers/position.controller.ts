@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -36,5 +37,10 @@ export class PositionController {
     @Param('id', ParseIntPipe) id: number,
   ) {
     return await this.PositionService.update(dto, id);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.PositionService.remove(id);
   }
 }
