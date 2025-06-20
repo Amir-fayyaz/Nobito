@@ -1,3 +1,3 @@
-export interface FindRoleById {
+export interface FindById {
   id: number;
 }

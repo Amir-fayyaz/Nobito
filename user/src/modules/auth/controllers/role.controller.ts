@@ -5,7 +5,7 @@ import { CreateRole } from '../dto/create-role.type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from '../entities/role.entity';
 import { Repository } from 'typeorm';
-import { FindRoleById } from '../dto/fine-one-by-id.type';
+import { FindById } from '../dto/fine-one-by-id.type';
 import { UpdateRole } from '../dto/update-role.type';
 import { RemoveRole } from '../dto/remove-role.type';
 
@@ -26,7 +26,7 @@ export class RoleController {
   }
 
   @MessagePattern(RoleMessage.FIND_ROLE_BY_ID)
-  async findOne(@Payload() { id }: FindRoleById) {
+  async findOne(@Payload() { id }: FindById) {
     return await this.roleService.findOne(id);
   }
 
