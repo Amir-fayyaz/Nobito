@@ -7,6 +7,8 @@ import { AuthService } from './services/auth.service';
 import { CacheService } from 'src/common/services/cache.service';
 import { RoleService } from './services/role.service';
 import { RoleController } from './controllers/role.controller';
+import { PositionService } from './services/position.service';
+import { PositionController } from './controllers/position.controller';
 
 @Module({
   imports: [
@@ -22,8 +24,8 @@ import { RoleController } from './controllers/role.controller';
       },
     ]),
   ],
-  controllers: [AuthController, RoleController],
-  providers: [AuthService, CacheService, RoleService],
+  controllers: [AuthController, RoleController, PositionController],
+  providers: [AuthService, CacheService, RoleService, PositionService],
   exports: [],
 })
 export class AuthModule {}
