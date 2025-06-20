@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from '../entities/role.entity';
 import { Repository } from 'typeorm';
 import { FindRoleById } from '../dto/fine-one-by-id.type';
+import { UpdateRole } from '../dto/update-role.type';
 
 export class RoleController {
   constructor(
@@ -26,5 +27,10 @@ export class RoleController {
   @MessagePattern(RoleMessage.FIND_ROLE_BY_ID)
   async findOne(@Payload() { id }: FindRoleById) {
     return await this.roleService.findOne(id);
+  }
+
+  @MessagePattern(RoleMessage.UPDATE_ROLE)
+  async update(@Payload() dto: UpdateRole) {
+    return await this.roleService.update(dto);
   }
 }
