@@ -7,6 +7,7 @@ import { Role } from '../entities/role.entity';
 import { Repository } from 'typeorm';
 import { FindRoleById } from '../dto/fine-one-by-id.type';
 import { UpdateRole } from '../dto/update-role.type';
+import { RemoveRole } from '../dto/remove-role.type';
 
 export class RoleController {
   constructor(
@@ -32,5 +33,10 @@ export class RoleController {
   @MessagePattern(RoleMessage.UPDATE_ROLE)
   async update(@Payload() dto: UpdateRole) {
     return await this.roleService.update(dto);
+  }
+
+  @MessagePattern(RoleMessage.DELETE_ROLE)
+  async remove(@Payload() { id }: RemoveRole) {
+    return await this.roleService.remove(id);
   }
 }
