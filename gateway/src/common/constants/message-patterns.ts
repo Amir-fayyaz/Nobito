@@ -18,3 +18,7 @@ export enum RoleMessagePattern {
   UPDATE_ROLE = 'update_role',
   DELETE_ROLE = 'remove_role',
 }
+
+export enum PositionMessagePattern {
+  CREATE_POSITION = 'create_position',
+}
