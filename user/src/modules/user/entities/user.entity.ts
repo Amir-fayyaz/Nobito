@@ -1,5 +1,6 @@
 import { Base } from 'src/common/entity/base-entity.dto';
-import { Column, Entity, Unique } from 'typeorm';
+import { Role } from 'src/modules/auth/entities/role.entity';
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 
 @Entity()
 @Unique(['email', 'phone'])
@@ -30,4 +31,13 @@ export class User extends Base {
 
   @Column('boolean', { default: false })
   isVerified: boolean;
+
+  @Column()
+  roleId: number;
+
+  @ManyToOne(() => Role, (role) => role.user, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  role: Role;
 }
