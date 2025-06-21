@@ -47,4 +47,8 @@ export class UserService {
 
     return savedUser;
   }
+
+  async exist(id: number): Promise<boolean> {
+    return await this.userRepository.exists({ where: { id } });
+  }
 }

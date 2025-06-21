@@ -68,6 +68,10 @@ export class PositionService {
     };
   }
 
+  async exist(id: number): Promise<boolean> {
+    return await this.positionRepository.exists({ where: { id } });
+  }
+
   private async hasConflict(name: string): Promise<boolean> {
     return !!(await this.positionRepository.existsBy({ name }));
   }
