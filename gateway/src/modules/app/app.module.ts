@@ -9,6 +9,7 @@ import { RedisModule } from 'src/common/modules/redis.module';
 import { AppCacheModule } from 'src/common/modules/cache.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
+import { PersonnelModule } from '../personnel/personnel.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from '../auth/auth.module';
     RedisModule.forRootAsync(),
     AppCacheModule,
     AuthModule,
+    PersonnelModule,
   ],
   controllers: [AppController],
   providers: [AppService],
