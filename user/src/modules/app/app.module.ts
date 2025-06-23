@@ -7,7 +7,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RabbitMQEnviroments } from 'src/common/constants/rabbitmq';
 import { Env } from 'src/common/constants/env';
 import { AuthModule } from '../auth/auth.module';
-import { S3Module } from '../file/S3.module';
 import { PersonnelModule } from '../personnel/personnel.module';
 
 @Module({
@@ -29,7 +28,6 @@ import { PersonnelModule } from '../personnel/personnel.module';
       },
     ]),
     AuthModule,
-    S3Module,
     PersonnelModule,
   ],
   providers: [TypeOrmConfig],
