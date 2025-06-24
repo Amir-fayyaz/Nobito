@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreatePersonnelDto } from './dto/create-personnel.dto';
@@ -23,5 +28,15 @@ export class PersonnelService {
         resume: url,
       }),
     );
+  }
+
+  async findOneById(id: number) {
+    const personnel = await lastValueFrom(
+      this.userClient.send(PersonnelMessagePattern.GET_PERSONNEL_BY_ID, { id }),
+    );
+
+    if (!personnel) throw new NotFoundException();
+
+    return personnel;
   }
 }
