@@ -1,15 +1,11 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreatePersonnelDto } from './dto/create-personnel.dto';
 import { PersonnelMessagePattern } from 'src/common/constants/message-patterns';
 import { lastValueFrom } from 'rxjs';
 import { S3Service } from 'src/common/services/S3.service';
+import { PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class PersonnelService {
@@ -38,5 +34,13 @@ export class PersonnelService {
     if (!personnel) throw new NotFoundException();
 
     return personnel;
+  }
+
+  async findAll(query: PaginateQuery) {
+    return await lastValueFrom(
+      this.userClient.send(PersonnelMessagePattern.GET_ALL_PERSONNEL, {
+        query,
+      }),
+    );
   }
 }
