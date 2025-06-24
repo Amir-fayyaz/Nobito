@@ -5,6 +5,7 @@ import { CreatePersonnel } from './dto/create-personnel.type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Personnel } from './entities/personnel.entity';
 import { Repository } from 'typeorm';
+import { FindOneById } from './dto/find-one-by-id.type';
 
 export class PersonnelController {
   constructor(
@@ -16,5 +17,10 @@ export class PersonnelController {
   @MessagePattern(PersonnelMessage.CREATE_PERSONNEL)
   async create(@Payload() dto: CreatePersonnel) {
     return await this.personnelService.create(dto);
+  }
+
+  @MessagePattern(PersonnelMessage.GET_PERSONNEL_BY_ID)
+  async findOne(@Payload() { id }: FindOneById) {
+    return await this.personnelService.findOneById(id);
   }
 }
