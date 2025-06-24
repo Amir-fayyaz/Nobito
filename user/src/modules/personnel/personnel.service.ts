@@ -4,6 +4,7 @@ import { Personnel } from './entities/personnel.entity';
 import { DeepPartial, Repository } from 'typeorm';
 import { CreatePersonnel } from './dto/create-personnel.type';
 import { generatePersonnelNumber } from 'src/common/utility/set-personnel-number';
+import { FilterOperator, paginate, PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class PersonnelService {
@@ -33,5 +34,33 @@ export class PersonnelService {
 
   async findOneById(id: number) {
     return await this.personnelRepository.findOne({ where: { id } });
+  }
+
+  async findAll(query: PaginateQuery) {
+    return await paginate(query, this.personnelRepository, {
+      sortableColumns: ['createdAt', 'updatedAt'],
+      defaultSortBy: [['createdAt', 'DESC']],
+      searchableColumns: ['PersonnelNumber', 'positionId', 'salary_amount'],
+      select: [
+        'id',
+        'createdAt',
+        'updatedAt',
+        'name',
+        'salary_amount',
+        'PersonnelNumber',
+        'resume',
+        'positionId',
+        'userId',
+      ],
+
+      filterableColumns: {
+        positionId: [FilterOperator.EQ],
+        salary_amount: [
+          FilterOperator.EQ,
+          FilterOperator.GT,
+          FilterOperator.LT,
+        ],
+      },
+    });
   }
 }
