@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Personnel } from './entities/personnel.entity';
 import { DeepPartial, Repository } from 'typeorm';
@@ -12,14 +12,22 @@ export class PersonnelService {
     private readonly personnelRepository: Repository<Personnel>,
   ) {}
 
-  async create(dto: CreatePersonnel): Promise<DeepPartial<Personnel>> {
-    const newPersonnel: DeepPartial<Personnel> =
-      this.personnelRepository.create(dto);
-    const savedPersonnel = await this.personnelRepository.save(newPersonnel);
+  async create(
+    dto: CreatePersonnel,
+  ): Promise<DeepPartial<Personnel> | { message: string }> {
+    try {
+      const newPersonnel: DeepPartial<Personnel> =
+        this.personnelRepository.create(dto);
+      const savedPersonnel = await this.personnelRepository.save(newPersonnel);
 
-    const personnelNumber: string = generatePersonnelNumber(1);
-    savedPersonnel.PersonnelNumber = personnelNumber;
+      const personnelNumber: string = generatePersonnelNumber(
+        savedPersonnel.id,
+      );
+      savedPersonnel.PersonnelNumber = personnelNumber;
 
-    return await this.personnelRepository.save(savedPersonnel);
+      return await this.personnelRepository.save(savedPersonnel);
+    } catch (error) {
+      return { message: error.message };
+    }
   }
 }
