@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Personnel } from './entities/personnel.entity';
 import { Repository } from 'typeorm';
 import { FindOneById } from './dto/find-one-by-id.type';
+import { PaginateQuery } from 'nestjs-paginate';
+import { FindAllPersonnel } from './dto/find-all-personnel.type';
 
 export class PersonnelController {
   constructor(
@@ -22,5 +24,10 @@ export class PersonnelController {
   @MessagePattern(PersonnelMessage.GET_PERSONNEL_BY_ID)
   async findOne(@Payload() { id }: FindOneById) {
     return await this.personnelService.findOneById(id);
+  }
+
+  @MessagePattern(PersonnelMessage.GET_ALL_PERSONNEL)
+  async findAll(@Payload() { query }: FindAllPersonnel) {
+    return await this.personnelService.findAll(query);
   }
 }
