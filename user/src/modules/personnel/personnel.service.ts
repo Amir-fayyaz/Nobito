@@ -30,4 +30,8 @@ export class PersonnelService {
       return { message: error.message };
     }
   }
+
+  async findOneById(id: number) {
+    return await this.personnelRepository.findOne({ where: { id } });
+  }
 }
