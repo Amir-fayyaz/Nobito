@@ -8,7 +8,7 @@ export class Personnel extends Base {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true, unique: true })
   PersonnelNumber: string;
 
   @Column()
