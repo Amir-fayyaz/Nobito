@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { FindOneById } from './dto/find-one-by-id.type';
 import { PaginateQuery } from 'nestjs-paginate';
 import { FindAllPersonnel } from './dto/find-all-personnel.type';
+import { UpdatePersonnel } from './dto/update-personnel.type';
 
 export class PersonnelController {
   constructor(
@@ -29,5 +30,10 @@ export class PersonnelController {
   @MessagePattern(PersonnelMessage.GET_ALL_PERSONNEL)
   async findAll(@Payload() { query }: FindAllPersonnel) {
     return await this.personnelService.findAll(query);
+  }
+
+  @MessagePattern(PersonnelMessage.UPDATE_PERSONNEL)
+  async update(@Payload() dto: UpdatePersonnel) {
+    return await this.personnelService.update(dto);
   }
 }
