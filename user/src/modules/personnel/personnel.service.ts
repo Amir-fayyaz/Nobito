@@ -5,6 +5,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { CreatePersonnel } from './dto/create-personnel.type';
 import { generatePersonnelNumber } from 'src/common/utility/set-personnel-number';
 import { FilterOperator, paginate, PaginateQuery } from 'nestjs-paginate';
+import { UpdatePersonnel } from './dto/update-personnel.type';
 
 @Injectable()
 export class PersonnelService {
@@ -62,5 +63,12 @@ export class PersonnelService {
         ],
       },
     });
+  }
+
+  async update(dto: UpdatePersonnel) {
+    return (await this.personnelRepository.update({ id: dto.id }, { ...dto }))
+      .affected === 0
+      ? { status: 404 }
+      : { updatedFields: { ...dto } };
   }
 }
