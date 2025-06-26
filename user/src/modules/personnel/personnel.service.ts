@@ -66,9 +66,13 @@ export class PersonnelService {
   }
 
   async update(dto: UpdatePersonnel) {
-    return (await this.personnelRepository.update({ id: dto.id }, { ...dto }))
-      .affected === 0
-      ? { status: 404 }
-      : { updatedFields: { ...dto } };
+    try {
+      return (await this.personnelRepository.update({ id: dto.id }, { ...dto }))
+        .affected === 0
+        ? { status: 404 }
+        : { updatedFields: { ...dto } };
+    } catch (error) {
+      return { message: error.message, status: 400 };
+    }
   }
 }
