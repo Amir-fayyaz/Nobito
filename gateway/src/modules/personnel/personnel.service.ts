@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -74,6 +75,23 @@ export class PersonnelService {
       return updateResult;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const deleteResult = await lastValueFrom(
+        this.userClient.send(PersonnelMessagePattern.DELETE_PERSONNEL, { id }),
+      );
+
+      if (deleteResult.status === 400) throw new BadRequestException();
+      if (deleteResult.status === 404) throw new NotFoundException();
+
+      return {
+        message: 'Deleted successfully',
+      };
+    } catch (e) {
+      throw new NotFoundException();
     }
   }
 }
