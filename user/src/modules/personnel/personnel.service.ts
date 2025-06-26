@@ -75,4 +75,15 @@ export class PersonnelService {
       return { message: error.message, status: 400 };
     }
   }
+
+  async remove(id: number) {
+    try {
+      const removeResult = await this.personnelRepository.delete({ id });
+      if (removeResult.affected === 0) return { status: 404 };
+
+      return;
+    } catch (error) {
+      return { status: 400, message: error.message };
+    }
+  }
 }
