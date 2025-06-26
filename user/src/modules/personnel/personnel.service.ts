@@ -81,7 +81,7 @@ export class PersonnelService {
       const removeResult = await this.personnelRepository.delete({ id });
       if (removeResult.affected === 0) return { status: 404 };
 
-      return;
+      return id;
     } catch (error) {
       return { status: 400, message: error.message };
     }
