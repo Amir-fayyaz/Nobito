@@ -9,6 +9,7 @@ import { FindOneById } from './dto/find-one-by-id.type';
 import { PaginateQuery } from 'nestjs-paginate';
 import { FindAllPersonnel } from './dto/find-all-personnel.type';
 import { UpdatePersonnel } from './dto/update-personnel.type';
+import { RemovePersonnel } from './dto/remove-personnel.type';
 
 export class PersonnelController {
   constructor(
@@ -35,5 +36,10 @@ export class PersonnelController {
   @MessagePattern(PersonnelMessage.UPDATE_PERSONNEL)
   async update(@Payload() dto: UpdatePersonnel) {
     return await this.personnelService.update(dto);
+  }
+
+  @MessagePattern(PersonnelMessage.DELETE_PERSONNEL)
+  async remove(@Payload() { id }: RemovePersonnel) {
+    return await this.personnelService.remove(id);
   }
 }
