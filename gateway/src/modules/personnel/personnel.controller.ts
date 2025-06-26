@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -60,5 +61,10 @@ export class PersonnelController {
     @UploadedFile() resume: Express.Multer.File,
   ) {
     return await this.personnelService.update(id, dto, resume);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.personnelService.remove(id);
   }
 }
