@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreatePersonnelDto } from './dto/create-personnel.dto';
@@ -6,6 +11,7 @@ import { PersonnelMessagePattern } from 'src/common/constants/message-patterns';
 import { lastValueFrom } from 'rxjs';
 import { S3Service } from 'src/common/services/S3.service';
 import { PaginateQuery } from 'nestjs-paginate';
+import { UpdatePersonnelDto } from './dto/update-personnel.dto';
 
 @Injectable()
 export class PersonnelService {
@@ -42,5 +48,32 @@ export class PersonnelService {
         query,
       }),
     );
+  }
+
+  async update(
+    id: number,
+    dto: UpdatePersonnelDto,
+    resume: Express.Multer.File,
+  ) {
+    if (dto.resume) {
+      const { url } = await this.s3service.uploadFile(resume);
+      dto.resume = url;
+    }
+
+    try {
+      const updateResult = await lastValueFrom(
+        this.userClient.send(PersonnelMessagePattern.UPDATE_PERSONNEL, {
+          id,
+          ...dto,
+        }),
+      );
+
+      if (updateResult.status === 400) return updateResult;
+      if (updateResult.status === 404) throw new NotFoundException();
+
+      return updateResult;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }
