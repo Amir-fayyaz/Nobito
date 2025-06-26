@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { Personnel } from './models/personnel.model';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { PaginatePersonnelResponse } from './dto/paginate-personnel-response.dto';
 import { PaginationOptions } from 'src/common/decorators/pagination-options.decorator';
+import { UpdatePersonnelDto } from './dto/update-personnel.dto';
 
 @Controller('api/v1/personnel')
 export class PersonnelController {
@@ -47,5 +49,16 @@ export class PersonnelController {
   @ApiOkResponse({ type: Personnel })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.personnelService.findOneById(id);
+  }
+
+  @Put(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('resume'))
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdatePersonnelDto,
+    @UploadedFile() resume: Express.Multer.File,
+  ) {
+    return await this.personnelService.update(id, dto, resume);
   }
 }
