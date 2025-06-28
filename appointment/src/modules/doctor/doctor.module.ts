@@ -20,6 +20,15 @@ import { Env } from 'src/common/constants/env';
           queueOptions: { durable: true },
         },
       },
+      {
+        name: RabbitmqEnviroments.UserService_Name,
+        transport: Transport.RMQ,
+        options: {
+          urls: [Env.RABBITMQ_URL as string],
+          queue: RabbitmqEnviroments.User_Queue,
+          queueOptions: { durable: true },
+        },
+      },
     ]),
   ],
   controllers: [DoctorController],
