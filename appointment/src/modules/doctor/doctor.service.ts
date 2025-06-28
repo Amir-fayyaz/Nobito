@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Doctor } from './entities/doctor.entity';
 import { Repository } from 'typeorm';
-import { CreateDoctor } from './dto/create-doctor.dto';
+import { CreateDoctor } from './dto/create-doctor.type';
 import { RabbitmqEnviroments } from 'src/common/constants/rabbitmq';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
