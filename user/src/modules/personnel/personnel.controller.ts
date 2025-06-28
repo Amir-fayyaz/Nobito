@@ -42,4 +42,9 @@ export class PersonnelController {
   async remove(@Payload() { id }: RemovePersonnel) {
     return await this.personnelService.remove(id);
   }
+
+  @MessagePattern(PersonnelMessage.IS_EXIST)
+  async isExist(@Payload() { id }: FindOneById) {
+    return await this.personnelService.isExist(id);
+  }
 }
