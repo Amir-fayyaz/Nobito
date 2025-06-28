@@ -10,6 +10,7 @@ import { AppCacheModule } from 'src/common/modules/cache.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
 import { PersonnelModule } from '../personnel/personnel.module';
+import { DoctorModule } from '../doctor/doctor.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PersonnelModule } from '../personnel/personnel.module';
     AppCacheModule,
     AuthModule,
     PersonnelModule,
+    DoctorModule,
   ],
   controllers: [AppController],
   providers: [AppService],
