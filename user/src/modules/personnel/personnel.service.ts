@@ -86,4 +86,9 @@ export class PersonnelService {
       return { status: 400, message: error.message };
     }
   }
+
+  //for export
+  async isExist(id: number): Promise<boolean> {
+    return await this.personnelRepository.exists({ where: { id } });
+  }
 }
