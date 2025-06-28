@@ -4,4 +4,5 @@ export enum PersonnelMessage {
   GET_PERSONNEL_BY_ID = 'get_personnel_by_id',
   UPDATE_PERSONNEL = 'update_personnel',
   DELETE_PERSONNEL = 'delete_personnel',
+  IS_EXIST = 'is_personnel_exist',
 }
