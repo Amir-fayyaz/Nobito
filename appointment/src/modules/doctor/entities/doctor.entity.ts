@@ -6,6 +6,6 @@ export class Doctor extends Base {
   @Column({ nullable: true, unique: true })
   doctorNumber: string;
 
-  @Column()
+  @Column({ unique: true })
   personnelId: number;
 }
