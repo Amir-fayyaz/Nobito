@@ -6,6 +6,7 @@ import { Doctor } from './entities/doctor.entity';
 import { Repository } from 'typeorm';
 import { DoctorService } from './doctor.service';
 import { FindAllDoctors } from './dto/find-all-doctors.type';
+import { FindOneDoctorById } from './dto/find-one-by-id.type';
 
 export class DoctorController {
   constructor(
@@ -21,5 +22,10 @@ export class DoctorController {
   @MessagePattern(DoctorMessage.FIND_ALL_DOCTOR)
   async findAll(@Payload() { query }: FindAllDoctors) {
     return await this.doctorService.findAll(query);
+  }
+
+  @MessagePattern(DoctorMessage.FIND_ONE_DOCTOR)
+  async findOneById(@Payload() { id }: FindOneDoctorById) {
+    return await this.doctorService.findOneById(id);
   }
 }
