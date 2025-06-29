@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Doctor } from './entities/doctor.entity';
 import { Repository } from 'typeorm';
 import { DoctorService } from './doctor.service';
+import { FindAllDoctors } from './dto/find-all-doctors.type';
 
 export class DoctorController {
   constructor(
@@ -15,5 +16,10 @@ export class DoctorController {
   @MessagePattern(DoctorMessage.CREATE_DOCTOR)
   async create(@Payload() dto: CreateDoctor) {
     return await this.doctorService.create(dto);
+  }
+
+  @MessagePattern(DoctorMessage.FIND_ALL_DOCTOR)
+  async findAll(@Payload() { query }: FindAllDoctors) {
+    return await this.doctorService.findAll(query);
   }
 }
