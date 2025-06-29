@@ -8,6 +8,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { PersonnelMessage } from 'src/common/constants/message-patterns/personnel.messages';
 import { generateDoctorNumber } from 'src/common/utility/set-doctorNumber';
+import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class DoctorService {
@@ -29,6 +30,15 @@ export class DoctorService {
     } catch (error) {
       return { message: error.message, status: 404 };
     }
+  }
+
+  async findAll(query: PaginateQuery): Promise<Paginated<Doctor>> {
+    return await paginate(query, this.doctorRepository, {
+      sortableColumns: ['createdAt', 'updatedAt'],
+      defaultSortBy: [['createdAt', 'DESC']],
+      searchableColumns: ['doctorNumber'],
+      select: ['id', 'createdAt', 'updatedAt', 'personnelId', 'doctorNumber'],
+    });
   }
 
   private async isPersonnelExist(personnelId: number) {
