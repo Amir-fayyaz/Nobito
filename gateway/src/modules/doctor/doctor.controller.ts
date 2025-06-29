@@ -1,10 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { PaginationOptions } from 'src/common/decorators/pagination-options.decorator';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { PaginateDoctorResponse } from './dto/paginate-doctor-response.dto';
+import { Doctor } from './models/doctor.model';
 
 @Controller('api/v1/doctors')
 export class DoctorController {
@@ -22,5 +30,11 @@ export class DoctorController {
   @ApiOkResponse({ type: PaginateDoctorResponse })
   async findAll(@Paginate() query: PaginateQuery) {
     return await this.doctorService.findAll(query);
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ type: Doctor })
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.doctorService.findOneById(id);
   }
 }
