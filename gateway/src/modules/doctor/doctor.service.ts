@@ -9,6 +9,8 @@ import { AppointmentRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { DoctorMessagePattern } from 'src/common/constants/message-patterns';
 import { lastValueFrom } from 'rxjs';
+import { Paginated, PaginateQuery } from 'nestjs-paginate';
+import { Doctor } from './models/doctor.model';
 
 @Injectable()
 export class DoctorService {
@@ -35,5 +37,13 @@ export class DoctorService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  async findAll(query: PaginateQuery): Promise<Paginated<Doctor>> {
+    return await lastValueFrom(
+      this.appointmentClient.send(DoctorMessagePattern.FIND_ALL_DOCTOR, {
+        query,
+      }),
+    );
   }
 }
