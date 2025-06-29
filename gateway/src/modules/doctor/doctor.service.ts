@@ -46,4 +46,14 @@ export class DoctorService {
       }),
     );
   }
+
+  async findOneById(id: number): Promise<Doctor> {
+    const doctor = await lastValueFrom(
+      this.appointmentClient.send(DoctorMessagePattern.FIND_ONE_DOCTOR, { id }),
+    );
+
+    if (!doctor) throw new NotFoundException();
+
+    return doctor;
+  }
 }
