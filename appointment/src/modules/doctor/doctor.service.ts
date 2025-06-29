@@ -9,6 +9,7 @@ import { lastValueFrom } from 'rxjs';
 import { PersonnelMessage } from 'src/common/constants/message-patterns/personnel.messages';
 import { generateDoctorNumber } from 'src/common/utility/set-doctorNumber';
 import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
+import { UpdateDoctor } from './dto/update-doctor.type';
 
 @Injectable()
 export class DoctorService {
@@ -43,6 +44,21 @@ export class DoctorService {
 
   async findOneById(id: number): Promise<Doctor | null> {
     return await this.doctorRepository.findOne({ where: { id } });
+  }
+
+  async update(dto: UpdateDoctor) {
+    const doctor = await this.doctorRepository.findOne({
+      where: { personnelId: dto.personnelId },
+    });
+
+    if (doctor && doctor.id !== dto.id) return { status: 409 };
+
+    return (
+      await this.doctorRepository.update(
+        { id: dto.id },
+        { personnelId: dto.personnelId },
+      )
+    ).affected;
   }
 
   private async isPersonnelExist(personnelId: number) {
