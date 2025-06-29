@@ -41,6 +41,10 @@ export class DoctorService {
     });
   }
 
+  async findOneById(id: number): Promise<Doctor | null> {
+    return await this.doctorRepository.findOne({ where: { id } });
+  }
+
   private async isPersonnelExist(personnelId: number) {
     const personnel: boolean = await lastValueFrom(
       this.userClient.send(PersonnelMessage.IS_EXIST, { id: personnelId }),
