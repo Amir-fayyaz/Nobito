@@ -8,6 +8,7 @@ import { DoctorService } from './doctor.service';
 import { FindAllDoctors } from './dto/find-all-doctors.type';
 import { FindOneDoctorById } from './dto/find-one-by-id.type';
 import { UpdateDoctor } from './dto/update-doctor.type';
+import { RemoveDoctor } from './dto/remove-doctor.type';
 
 export class DoctorController {
   constructor(
@@ -33,5 +34,10 @@ export class DoctorController {
   @MessagePattern(DoctorMessage.UPDATE_DOCTOR)
   async update(@Payload() dto: UpdateDoctor) {
     return await this.doctorService.update(dto);
+  }
+
+  @MessagePattern(DoctorMessage.DELETE_DOCTOR)
+  async remove(@Payload() { id }: RemoveDoctor) {
+    return await this.doctorService.remove(id);
   }
 }
