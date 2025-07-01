@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { DoctorService } from './doctor.service';
 import { FindAllDoctors } from './dto/find-all-doctors.type';
 import { FindOneDoctorById } from './dto/find-one-by-id.type';
+import { UpdateDoctor } from './dto/update-doctor.type';
 
 export class DoctorController {
   constructor(
@@ -27,5 +28,10 @@ export class DoctorController {
   @MessagePattern(DoctorMessage.FIND_ONE_DOCTOR)
   async findOneById(@Payload() { id }: FindOneDoctorById) {
     return await this.doctorService.findOneById(id);
+  }
+
+  @MessagePattern(DoctorMessage.UPDATE_DOCTOR)
+  async update(@Payload() dto: UpdateDoctor) {
+    return await this.doctorService.update(dto);
   }
 }
