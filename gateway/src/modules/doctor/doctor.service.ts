@@ -11,6 +11,8 @@ import { DoctorMessagePattern } from 'src/common/constants/message-patterns';
 import { lastValueFrom } from 'rxjs';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Doctor } from './models/doctor.model';
+import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { exeptionFilter } from 'src/common/filters/exeption-filter';
 
 @Injectable()
 export class DoctorService {
@@ -19,6 +21,7 @@ export class DoctorService {
     private readonly appointmentClient: ClientProxy,
   ) {}
 
+  //! Fix 404 error !
   async create(dto: CreateDoctorDto) {
     try {
       const createResult = await lastValueFrom(
@@ -55,5 +58,22 @@ export class DoctorService {
     if (!doctor) throw new NotFoundException();
 
     return doctor;
+  }
+
+  async update(id: number, dto: UpdateDoctorDto) {
+    const updateResult = await lastValueFrom(
+      this.appointmentClient.send(DoctorMessagePattern.UPDATE_DOCTOR, {
+        id,
+        personnelId: dto.personnelId,
+      }),
+    );
+
+    if (updateResult.status) {
+      exeptionFilter(updateResult.status);
+    }
+
+    if (updateResult.affected === 0) exeptionFilter(404);
+
+    return updateResult;
   }
 }
