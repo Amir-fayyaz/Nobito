@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Doctor } from './entities/doctor.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateDoctor } from './dto/create-doctor.type';
 import { RabbitmqEnviroments } from 'src/common/constants/rabbitmq';
 import { ClientProxy } from '@nestjs/microservices';
@@ -59,6 +59,10 @@ export class DoctorService {
         { personnelId: dto.personnelId },
       )
     ).affected;
+  }
+
+  async remove(id: number): Promise<DeleteResult> {
+    return await this.doctorRepository.delete({ id });
   }
 
   private async isPersonnelExist(personnelId: number) {
