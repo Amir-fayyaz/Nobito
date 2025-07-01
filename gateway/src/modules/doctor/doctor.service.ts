@@ -13,6 +13,7 @@ import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Doctor } from './models/doctor.model';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { exeptionFilter } from 'src/common/filters/exeption-filter';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class DoctorService {
@@ -21,7 +22,6 @@ export class DoctorService {
     private readonly appointmentClient: ClientProxy,
   ) {}
 
-  //! Fix 404 error !
   async create(dto: CreateDoctorDto) {
     try {
       const createResult = await lastValueFrom(
@@ -31,14 +31,14 @@ export class DoctorService {
       );
 
       if (createResult.status === 404) {
-        throw new NotFoundException('There is no personnel with this id');
+        exeptionFilter(404);
       }
 
       return {
         doctor: createResult,
       };
     } catch (error) {
-      throw new BadRequestException(error.message);
+      exeptionFilter(404);
     }
   }
 
@@ -75,5 +75,15 @@ export class DoctorService {
     if (updateResult.affected === 0) exeptionFilter(404);
 
     return updateResult;
+  }
+
+  async remove(id: number) {
+    const deleteResult: DeleteResult = await lastValueFrom(
+      this.appointmentClient.send(DoctorMessagePattern.DELETE_DOCTOR, { id }),
+    );
+
+    if (!deleteResult.affected) exeptionFilter(404);
+
+    return id;
   }
 }
