@@ -51,7 +51,13 @@ export class DoctorService {
       where: { personnelId: dto.personnelId },
     });
 
-    if (doctor && doctor.id !== dto.id) return { status: 409 };
+    if (doctor && doctor.id != Number(dto.id)) return { status: 409 };
+
+    try {
+      await this.isPersonnelExist(dto.personnelId);
+    } catch (error) {
+      return { status: 404 };
+    }
 
     return (
       await this.doctorRepository.update(

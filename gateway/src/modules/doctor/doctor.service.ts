@@ -69,7 +69,7 @@ export class DoctorService {
     );
 
     if (updateResult.status) {
-      exeptionFilter(updateResult.status);
+      exeptionFilter(updateResult.status, 'Invalid personnelId');
     }
 
     if (updateResult.affected === 0) exeptionFilter(404);
