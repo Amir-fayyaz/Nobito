@@ -46,3 +46,11 @@ export enum DoctorMessagePattern {
   FIND_ONE_DOCTOR = 'find_one_doctor',
   DELETE_DOCTOR = 'delete_doctor',
 }
+
+export enum AttendanceMessagePattern {
+  FIND_ALL_ATTENDANCE = 'find_all_attendance',
+  FIND_ONE_ATTENDANCE = 'find_one_attendance',
+  CREATE_ATTENDANCE = 'create_attendance',
+  UPDATE_ATTENDANCE = 'update_attendance',
+  DELETE_ATTENDANCE = 'delete_attendance',
+}
