@@ -2,17 +2,22 @@ import { Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FilterOperator, paginate, PaginateQuery } from 'nestjs-paginate';
+import {
+  FilterOperator,
+  paginate,
+  Paginated,
+  PaginateQuery,
+} from 'nestjs-paginate';
 import { CreateUserType } from './types/create-user.type';
 
-@Injectable({ scope: Scope.DEFAULT })
+@Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getAll(params: PaginateQuery) {
+  async getAll(params: PaginateQuery): Promise<Paginated<User>> {
     return paginate(params, this.userRepository, {
       sortableColumns: ['createdAt'],
       defaultSortBy: [['createdAt', 'DESC']],
@@ -35,13 +40,11 @@ export class UserService {
     });
   }
 
-  async findOneById(id: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
-
-    return user;
+  async findOneById(id: number): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
-  async create(dto: CreateUserType) {
+  async create(dto: CreateUserType): Promise<User> {
     const newUser = this.userRepository.create(dto);
     const savedUser = await this.userRepository.save(newUser);
 
