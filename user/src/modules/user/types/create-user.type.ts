@@ -7,4 +7,5 @@ export type CreateUserType = {
   nationalCode?: string;
   avatar?: string;
   fathername?: string;
+  roleId: number;
 };
