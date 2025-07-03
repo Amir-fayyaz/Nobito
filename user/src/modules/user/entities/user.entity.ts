@@ -32,7 +32,7 @@ export class User extends Base {
   @Column('boolean', { default: false })
   isVerified: boolean;
 
-  @Column()
+  @Column({ default: 1 })
   roleId: number;
 
   @ManyToOne(() => Role, (role) => role.user, {
