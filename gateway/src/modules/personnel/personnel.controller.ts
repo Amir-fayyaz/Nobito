@@ -19,8 +19,13 @@ import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { PaginatePersonnelResponse } from './dto/paginate-personnel-response.dto';
 import { PaginationOptions } from 'src/common/decorators/pagination-options.decorator';
 import { UpdatePersonnelDto } from './dto/update-personnel.dto';
+import { Auth } from 'src/common/decorators/auth.decorator';
+import { Role } from 'src/common/decorators/role.decorator';
+import { Roles } from 'src/common/enums/role.enum';
 
 @Controller('api/v1/personnel')
+@Auth()
+//! need role auth
 export class PersonnelController {
   constructor(private readonly personnelService: PersonnelService) {}
 
