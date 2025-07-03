@@ -18,12 +18,14 @@ export class Personnel extends Base {
   resume: string;
 
   //relations
-  @ManyToOne(() => Position, (position) => position.personnel)
+  @ManyToOne(() => Position, (position) => position.personnel, {
+    cascade: true,
+  })
   position: Position;
   @Column()
   positionId: number;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, { cascade: true })
   user: User;
   @Column()
   userId: number;
