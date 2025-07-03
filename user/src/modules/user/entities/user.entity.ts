@@ -1,9 +1,8 @@
 import { Base } from 'src/common/entity/base-entity.dto';
 import { Role } from 'src/modules/auth/entities/role.entity';
-import { Column, Entity, ManyToOne, Unique } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
-@Unique(['email', 'phone'])
 export class User extends Base {
   @Column({ nullable: true })
   firstname: string;
@@ -11,10 +10,10 @@ export class User extends Base {
   @Column({ nullable: true })
   lastname: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   phone: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   email: string;
 
   @Column({ nullable: true })
