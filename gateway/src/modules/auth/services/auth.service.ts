@@ -55,17 +55,20 @@ export class AuthService {
       throw new BadRequestException('You did not get otp code !');
     }
 
-    console.log(isOtpSent, otp);
     if (isOtpSent !== otp) throw new BadRequestException('Wrong otp');
 
-    const token: string = await lastValueFrom(
-      this.userClient.send(AuthMessagePattern.VERIFY_BY_PHONE, { phone }),
-    );
-    await this.cacheService.del(`otp:${phone}`);
+    try {
+      const token: string = await lastValueFrom(
+        this.userClient.send(AuthMessagePattern.VERIFY_BY_PHONE, { phone }),
+      );
+      await this.cacheService.del(`otp:${phone}`);
 
-    return {
-      access_token: token,
-    };
+      return {
+        access_token: token,
+      };
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   async registerByEmail({ email }: RegisterByEmail) {
