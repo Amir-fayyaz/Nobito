@@ -65,7 +65,14 @@ export class AttendanceService {
     return await this.attendanceRespository.findOne({ where: { id } });
   }
 
-  async update(dto: UpdateAttendance): Promise<number | undefined> {
+  async update(
+    dto: UpdateAttendance,
+  ): Promise<number | undefined | execptionError> {
+    try {
+      await this.isPersonnelExist(dto.personnelId);
+    } catch (error) {
+      return { status: 404, message: error.message };
+    }
     return (await this.attendanceRespository.update({ id: dto.id }, { ...dto }))
       .affected;
   }
