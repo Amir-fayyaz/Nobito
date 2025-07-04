@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -62,5 +63,10 @@ export class AttendanceController {
     @Body() dto: UpdateAttendanceDto,
   ) {
     return await this.attendanceService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.attendanceService.remove(id);
   }
 }
