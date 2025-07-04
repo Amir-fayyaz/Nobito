@@ -8,6 +8,12 @@ import { lastValueFrom } from 'rxjs';
 import { RabbitmqEnviroments } from 'src/common/constants/rabbitmq';
 import { ClientProxy } from '@nestjs/microservices';
 import { execptionError } from 'src/common/@types/eception.type';
+import {
+  FilterOperator,
+  paginate,
+  Paginated,
+  PaginateQuery,
+} from 'nestjs-paginate';
 
 @Injectable()
 export class AttendanceService {
@@ -31,6 +37,26 @@ export class AttendanceService {
     } catch (e) {
       return { status: 400, message: e.message };
     }
+  }
+
+  async findAll(query: PaginateQuery): Promise<Paginated<Attendance>> {
+    return await paginate(query, this.attendanceRespository, {
+      sortableColumns: ['createdAt', 'startTime', 'exitTime'],
+      defaultSortBy: [['createdAt', 'DESC']],
+      select: [
+        'id',
+        'createdAt',
+        'updatedAt',
+        'startTime',
+        'exitTime',
+        'personnelId',
+      ],
+
+      filterableColumns: {
+        startTime: [FilterOperator.EQ, FilterOperator.GT, FilterOperator.LT],
+        exitTime: [FilterOperator.EQ, FilterOperator.GT, FilterOperator.LT],
+      },
+    });
   }
 
   private async isPersonnelExist(personnelId: number): Promise<void> {
