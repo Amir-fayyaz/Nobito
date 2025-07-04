@@ -5,6 +5,7 @@ import { AttendanceService } from './attendance.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AttendanceMessage } from 'src/common/constants/message-patterns/attendance.messages';
 import { CreateAttendance } from './dto/create-attendance.type';
+import { FindAllAttendace } from './dto/find-all-attendance.type';
 
 export class AttendanceController {
   constructor(
@@ -16,5 +17,10 @@ export class AttendanceController {
   @MessagePattern(AttendanceMessage.CREATE_ATTENDANCE)
   async create(@Payload() dto: CreateAttendance) {
     return await this.attendanceService.create(dto);
+  }
+
+  @MessagePattern(AttendanceMessage.FIND_ALL_ATTENDANCE)
+  async findAll(@Payload() { query }: FindAllAttendace) {
+    return await this.attendanceService.findAll(query);
   }
 }
