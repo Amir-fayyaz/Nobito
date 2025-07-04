@@ -55,6 +55,7 @@ export class AttendanceService {
       filterableColumns: {
         startTime: [FilterOperator.EQ, FilterOperator.GT, FilterOperator.LT],
         exitTime: [FilterOperator.EQ, FilterOperator.GT, FilterOperator.LT],
+        personnelId: [FilterOperator.EQ],
       },
     });
   }
