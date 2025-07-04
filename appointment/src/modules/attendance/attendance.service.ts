@@ -14,6 +14,7 @@ import {
   Paginated,
   PaginateQuery,
 } from 'nestjs-paginate';
+import { UpdateAttendance } from './dto/update-attendance.type';
 
 @Injectable()
 export class AttendanceService {
@@ -62,6 +63,11 @@ export class AttendanceService {
 
   async findOne(id: number): Promise<Attendance | null> {
     return await this.attendanceRespository.findOne({ where: { id } });
+  }
+
+  async update(dto: UpdateAttendance): Promise<number | undefined> {
+    return (await this.attendanceRespository.update({ id: dto.id }, { ...dto }))
+      .affected;
   }
 
   private async isPersonnelExist(personnelId: number): Promise<void> {
