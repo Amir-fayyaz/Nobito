@@ -67,4 +67,16 @@ export class AttendanceService {
       updatedFields: dto,
     };
   }
+
+  async remove(id: number): Promise<number> {
+    const removeResult: number = await lastValueFrom(
+      this.AppointmentClient.send(AttendanceMessagePattern.DELETE_ATTENDANCE, {
+        id,
+      }),
+    );
+
+    if (!removeResult) exeptionFilter(404);
+
+    return id;
+  }
 }
