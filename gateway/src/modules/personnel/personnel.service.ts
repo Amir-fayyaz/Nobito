@@ -11,8 +11,10 @@ import { CreatePersonnelDto } from './dto/create-personnel.dto';
 import { PersonnelMessagePattern } from 'src/common/constants/message-patterns';
 import { lastValueFrom } from 'rxjs';
 import { S3Service } from 'src/common/services/S3.service';
-import { PaginateQuery } from 'nestjs-paginate';
+import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdatePersonnelDto } from './dto/update-personnel.dto';
+import { Personnel } from './models/personnel.model';
+import { exeptionFilter } from 'src/common/filters/exeption-filter';
 
 @Injectable()
 export class PersonnelService {
@@ -22,7 +24,10 @@ export class PersonnelService {
     private readonly s3service: S3Service,
   ) {}
 
-  async create(dto: CreatePersonnelDto, resume: Express.Multer.File) {
+  async create(
+    dto: CreatePersonnelDto,
+    resume: Express.Multer.File,
+  ): Promise<Personnel> {
     const { url } = await this.s3service.uploadFile(resume);
 
     return await lastValueFrom(
@@ -33,17 +38,17 @@ export class PersonnelService {
     );
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number): Promise<Personnel> {
     const personnel = await lastValueFrom(
       this.userClient.send(PersonnelMessagePattern.GET_PERSONNEL_BY_ID, { id }),
     );
 
-    if (!personnel) throw new NotFoundException();
+    if (!personnel) exeptionFilter(404);
 
     return personnel;
   }
 
-  async findAll(query: PaginateQuery) {
+  async findAll(query: PaginateQuery): Promise<Paginated<Personnel>> {
     return await lastValueFrom(
       this.userClient.send(PersonnelMessagePattern.GET_ALL_PERSONNEL, {
         query,
@@ -69,12 +74,12 @@ export class PersonnelService {
         }),
       );
 
-      if (updateResult.status === 400) return updateResult;
-      if (updateResult.status === 404) throw new NotFoundException();
+      if (updateResult.status)
+        exeptionFilter(updateResult.status, updateResult.message);
 
       return updateResult;
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      exeptionFilter(500, error.message);
     }
   }
 
@@ -84,14 +89,14 @@ export class PersonnelService {
         this.userClient.send(PersonnelMessagePattern.DELETE_PERSONNEL, { id }),
       );
 
-      if (deleteResult.status === 400) throw new BadRequestException();
-      if (deleteResult.status === 404) throw new NotFoundException();
+      if (deleteResult.status)
+        exeptionFilter(deleteResult.status, deleteResult?.message);
 
       return {
         message: 'Deleted successfully',
       };
     } catch (e) {
-      throw new NotFoundException();
+      exeptionFilter(404, e.message);
     }
   }
 }
