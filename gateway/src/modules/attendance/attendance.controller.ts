@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
@@ -39,5 +46,11 @@ export class AttendanceController {
   @ApiOkResponse({ type: PaginateAttendanceResponse })
   async findAll(@Paginate() query: PaginateQuery) {
     return await this.attendanceService.findAll(query);
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ type: Attendance })
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.attendanceService.findOne(id);
   }
 }
