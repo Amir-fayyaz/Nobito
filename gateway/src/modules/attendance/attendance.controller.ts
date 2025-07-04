@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
@@ -13,6 +14,7 @@ import { Attendance } from './models/attendance.model';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { PaginateAttendanceResponse } from './dto/paginate-attendance-response.dto';
 import { PaginationOptions } from 'src/common/decorators/pagination-options.decorator';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 
 @Controller('api/v1/attendances')
 export class AttendanceController {
@@ -52,5 +54,13 @@ export class AttendanceController {
   @ApiOkResponse({ type: Attendance })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.attendanceService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateAttendanceDto,
+  ) {
+    return await this.attendanceService.update(id, dto);
   }
 }
