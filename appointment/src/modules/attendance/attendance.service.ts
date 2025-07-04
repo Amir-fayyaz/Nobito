@@ -77,6 +77,10 @@ export class AttendanceService {
       .affected;
   }
 
+  async remove(id: number): Promise<number> {
+    return (await this.attendanceRespository.delete({ id })).affected as number;
+  }
+
   private async isPersonnelExist(personnelId: number): Promise<void> {
     const personnel: boolean = await lastValueFrom(
       this.userClient.send(PersonnelMessage.IS_EXIST, { id: personnelId }),
