@@ -60,6 +60,10 @@ export class AttendanceService {
     });
   }
 
+  async findOne(id: number): Promise<Attendance | null> {
+    return await this.attendanceRespository.findOne({ where: { id } });
+  }
+
   private async isPersonnelExist(personnelId: number): Promise<void> {
     const personnel: boolean = await lastValueFrom(
       this.userClient.send(PersonnelMessage.IS_EXIST, { id: personnelId }),
