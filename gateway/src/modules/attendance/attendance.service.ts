@@ -37,4 +37,17 @@ export class AttendanceService {
       ),
     );
   }
+
+  async findOne(id: number): Promise<Attendance | Exeption> {
+    const attendance = await lastValueFrom(
+      this.AppointmentClient.send(
+        AttendanceMessagePattern.FIND_ONE_ATTENDANCE,
+        { id },
+      ),
+    );
+
+    if (!attendance) exeptionFilter(404);
+
+    return attendance;
+  }
 }
