@@ -25,8 +25,12 @@ export class AttendanceService {
       return { status: 404, message: error.message };
     }
 
-    const newAttendance = this.attendanceRespository.create(dto);
-    return await this.attendanceRespository.save(newAttendance);
+    try {
+      const newAttendance = this.attendanceRespository.create(dto);
+      return await this.attendanceRespository.save(newAttendance);
+    } catch (e) {
+      return { status: 400, message: e.message };
+    }
   }
 
   private async isPersonnelExist(personnelId: number): Promise<void> {
