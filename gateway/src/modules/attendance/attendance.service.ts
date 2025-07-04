@@ -6,6 +6,8 @@ import { lastValueFrom } from 'rxjs';
 import { AttendanceMessagePattern } from 'src/common/constants/message-patterns';
 import { exeptionFilter } from 'src/common/filters/exeption-filter';
 import { Attendance } from './models/attendance.model';
+import { Exeption } from 'src/common/@types/exeption-type.type';
+import { Paginated, PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class AttendanceService {
@@ -14,7 +16,7 @@ export class AttendanceService {
     private readonly AppointmentClient: ClientProxy,
   ) {}
 
-  async create(dto: CreateAttendanceDto): Promise<Attendance> {
+  async create(dto: CreateAttendanceDto): Promise<Attendance | Exeption> {
     const createResult = await lastValueFrom(
       this.AppointmentClient.send(AttendanceMessagePattern.CREATE_ATTENDANCE, {
         ...dto,
@@ -25,5 +27,14 @@ export class AttendanceService {
       exeptionFilter(createResult.status, createResult.message);
 
     return createResult;
+  }
+
+  async findAll(query: PaginateQuery): Promise<Paginated<Attendance>> {
+    return await lastValueFrom(
+      this.AppointmentClient.send(
+        AttendanceMessagePattern.FIND_ALL_ATTENDANCE,
+        { query },
+      ),
+    );
   }
 }
