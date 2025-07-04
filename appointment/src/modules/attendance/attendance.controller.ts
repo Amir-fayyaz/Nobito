@@ -7,6 +7,7 @@ import { AttendanceMessage } from 'src/common/constants/message-patterns/attenda
 import { CreateAttendance } from './dto/create-attendance.type';
 import { FindAllAttendace } from './dto/find-all-attendance.type';
 import { FindOneAttendance } from './dto/find-one-attendance.type';
+import { UpdateAttendance } from './dto/update-attendance.type';
 
 export class AttendanceController {
   constructor(
@@ -28,5 +29,10 @@ export class AttendanceController {
   @MessagePattern(AttendanceMessage.FIND_ONE_ATTENDANCE)
   async findOne(@Payload() { id }: FindOneAttendance) {
     return await this.attendanceService.findOne(id);
+  }
+
+  @MessagePattern(AttendanceMessage.UPDATE_ATTENDANCE)
+  async update(@Payload() dto: UpdateAttendance) {
+    return await this.attendanceService.update(dto);
   }
 }
