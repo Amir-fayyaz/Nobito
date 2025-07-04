@@ -14,6 +14,7 @@ import { Doctor } from './models/doctor.model';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { exeptionFilter } from 'src/common/filters/exeption-filter';
 import { DeleteResult } from 'typeorm';
+import { Exeption } from 'src/common/@types/exeption-type.type';
 
 @Injectable()
 export class DoctorService {
@@ -22,7 +23,7 @@ export class DoctorService {
     private readonly appointmentClient: ClientProxy,
   ) {}
 
-  async create(dto: CreateDoctorDto) {
+  async create(dto: CreateDoctorDto): Promise<Doctor | Exeption | undefined> {
     try {
       const createResult = await lastValueFrom(
         this.appointmentClient.send(DoctorMessagePattern.CREATE_DOCTOR, {
@@ -30,13 +31,9 @@ export class DoctorService {
         }),
       );
 
-      if (createResult.status === 404) {
-        exeptionFilter(404);
-      }
+      if (createResult.status) exeptionFilter(404);
 
-      return {
-        doctor: createResult,
-      };
+      return createResult;
     } catch (error) {
       exeptionFilter(404);
     }
@@ -55,12 +52,12 @@ export class DoctorService {
       this.appointmentClient.send(DoctorMessagePattern.FIND_ONE_DOCTOR, { id }),
     );
 
-    if (!doctor) throw new NotFoundException();
+    if (!doctor) exeptionFilter(404);
 
     return doctor;
   }
 
-  async update(id: number, dto: UpdateDoctorDto) {
+  async update(id: number, dto: UpdateDoctorDto): Promise<number> {
     const updateResult = await lastValueFrom(
       this.appointmentClient.send(DoctorMessagePattern.UPDATE_DOCTOR, {
         id,
@@ -72,12 +69,12 @@ export class DoctorService {
       exeptionFilter(updateResult.status, 'Invalid personnelId');
     }
 
-    if (updateResult.affected === 0) exeptionFilter(404);
+    if (updateResult === 0) exeptionFilter(404);
 
     return updateResult;
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<number> {
     const deleteResult: DeleteResult = await lastValueFrom(
       this.appointmentClient.send(DoctorMessagePattern.DELETE_DOCTOR, { id }),
     );
