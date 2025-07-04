@@ -15,6 +15,7 @@ import { CacheService } from 'src/common/services/cache.service';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { RegisterByEmail } from '../dto/register-by-email.dto';
 import { VerifyByEmail } from '../dto/verify-by-email.dto';
+import { exeptionFilter } from 'src/common/filters/exeption-filter';
 
 @Injectable()
 export class AuthService {
@@ -35,8 +36,7 @@ export class AuthService {
         this.userClient.send(AuthMessagePattern.REGISTER_BY_PHONE, { phone }),
       );
 
-      if (res.status === 409)
-        throw new ConflictException('user already exist!');
+      if (res.status) exeptionFilter(res.status);
 
       await this.cacheService.set(`otp:${phone}`, res.otp, 120 * 1000);
 
@@ -44,7 +44,7 @@ export class AuthService {
         otp: res.otp,
       };
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      exeptionFilter(500, error.message);
     }
   }
 
@@ -52,10 +52,10 @@ export class AuthService {
     const isOtpSent = await this.cacheService.get(`otp:${phone}`);
 
     if (!isOtpSent) {
-      throw new BadRequestException('You did not get otp code !');
+      exeptionFilter(400, 'Otp not found');
     }
 
-    if (isOtpSent !== otp) throw new BadRequestException('Wrong otp');
+    if (isOtpSent !== otp) exeptionFilter(400, 'Wrong otp');
 
     try {
       const token: string = await lastValueFrom(
@@ -67,7 +67,7 @@ export class AuthService {
         access_token: token,
       };
     } catch (e) {
-      console.log(e.message);
+      exeptionFilter(500, e.message);
     }
   }
 
@@ -80,7 +80,7 @@ export class AuthService {
       this.userClient.send(AuthMessagePattern.REGISTER_BY_EMAIL, { email }),
     );
 
-    if (res.status === 409) throw new ConflictException();
+    if (res.status) exeptionFilter(res.status);
 
     await this.cacheService.set(`otp:${email}`, res.otp, 120 * 1000);
 
