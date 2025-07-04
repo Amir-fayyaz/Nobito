@@ -8,6 +8,7 @@ import { exeptionFilter } from 'src/common/filters/exeption-filter';
 import { Attendance } from './models/attendance.model';
 import { Exeption } from 'src/common/@types/exeption-type.type';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 
 @Injectable()
 export class AttendanceService {
@@ -49,5 +50,21 @@ export class AttendanceService {
     if (!attendance) exeptionFilter(404);
 
     return attendance;
+  }
+
+  async update(id: number, dto: UpdateAttendanceDto) {
+    const updateResult = await lastValueFrom(
+      this.AppointmentClient.send(AttendanceMessagePattern.UPDATE_ATTENDANCE, {
+        id,
+        ...dto,
+      }),
+    );
+
+    if (updateResult.status)
+      exeptionFilter(updateResult.status, updateResult.message);
+
+    return {
+      updatedFields: dto,
+    };
   }
 }
