@@ -7,7 +7,7 @@ export class Attendance extends Base {
   startTime: string;
 
   @Column({ type: 'timestamp' })
-  existTime: string;
+  exitTime: string;
 
   @Column()
   personnelId: number;
