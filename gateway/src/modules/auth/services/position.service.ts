@@ -9,6 +9,10 @@ import { UserRabbitmq } from 'src/common/constants/rabbitmq';
 import { CreatePositionDto } from '../dto/create-position.dto';
 import { lastValueFrom } from 'rxjs';
 import { PositionMessagePattern } from 'src/common/constants/message-patterns';
+import { exeptionFilter } from 'src/common/filters/exeption-filter';
+import { Position } from '../models/position.model';
+import { Paginated } from 'nestjs-paginate';
+import { UpdatePositionDto } from '../dto/update-position.dto';
 
 @Injectable()
 export class PositionService {
@@ -17,25 +21,23 @@ export class PositionService {
     private readonly userClient: ClientProxy,
   ) {}
 
-  async create(dto: CreatePositionDto) {
+  async create(dto: CreatePositionDto): Promise<Position> {
     const createResult = await lastValueFrom(
       this.userClient.send(PositionMessagePattern.CREATE_POSITION, dto),
     );
 
-    if (createResult.status === 409) throw new ConflictException();
+    if (createResult.status) exeptionFilter(createResult.status);
 
-    return {
-      position: createResult,
-    };
+    return createResult;
   }
 
-  async findAll() {
+  async findAll(): Promise<Position[]> {
     return await lastValueFrom(
       this.userClient.send(PositionMessagePattern.GET_ALL_POSITIONS, {}),
     );
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Position> {
     const position = await lastValueFrom(
       this.userClient.send(PositionMessagePattern.FIND_ONE_BY_ID, { id }),
     );
@@ -45,7 +47,7 @@ export class PositionService {
     return position;
   }
 
-  async update(dto: any, id: number) {
+  async update(dto: UpdatePositionDto, id: number) {
     const updatedResult = await lastValueFrom(
       this.userClient.send(PositionMessagePattern.UPDATE_POSITION, {
         ...dto,
@@ -53,8 +55,8 @@ export class PositionService {
       }),
     );
 
-    if (updatedResult.status === 409) throw new ConflictException();
-    if (updatedResult.status === 404) throw new NotFoundException();
+    if (updatedResult.status)
+      exeptionFilter(updatedResult.status, updatedResult.message);
 
     return updatedResult;
   }
@@ -64,7 +66,7 @@ export class PositionService {
       this.userClient.send(PositionMessagePattern.DELETE_POSITION, { id }),
     );
 
-    if (deleteResult.status === 404) throw new NotFoundException();
+    if (deleteResult.status === 404) exeptionFilter(deleteResult.status);
 
     return deleteResult;
   }
