@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { TreatmentCategoryService } from './treatmentCategory.service';
 import { CreateTreatmentCategoryDto } from './dto/create-treatmentCategory.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
@@ -26,5 +33,11 @@ export class TreatmentCategoryController {
   @ApiOkResponse({ type: PaginateTreatmentCategoryResponse })
   async findAll(@Paginate() query: PaginateQuery) {
     return await this.treatmentCategoryService.findAll(query);
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ type: TreatmentCategory })
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.treatmentCategoryService.findOne(id);
   }
 }
