@@ -28,6 +28,18 @@ export class TreatmentCategoryService {
     return await paginate(query, this.treatmentCategoryRepository, {
       sortableColumns: ['createdAt'],
       defaultSortBy: [['createdAt', 'DESC']],
+      select: [
+        'id',
+        'createdAt',
+        'updatedAt',
+        'title',
+        'description',
+        'parentId',
+        'parent',
+        'parent.title',
+        'parent.description',
+      ],
+      relations: ['parent'],
     });
   }
 }
