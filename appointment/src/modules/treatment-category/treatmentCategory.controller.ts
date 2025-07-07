@@ -7,6 +7,7 @@ import { TreatmentCategoryMessage } from 'src/common/constants/message-patterns/
 import { CreateTreatmentCategory } from './dto/create-treatmentCategory.type';
 import { PaginateQuery } from 'nestjs-paginate';
 import { FindOneTreatmentCategory } from './dto/find-one-treatmentCategory.type';
+import { UpdateTreatmentCateogry } from './dto/update-treatmentCategory.type';
 
 export class TreatmentCategoryController {
   constructor(
@@ -28,5 +29,10 @@ export class TreatmentCategoryController {
   @MessagePattern(TreatmentCategoryMessage.FIND_ONE_TREATMENT_CATEGORY)
   async findOne(@Payload() { id }: FindOneTreatmentCategory) {
     return await this.treatmentCategoryService.findOne(id);
+  }
+
+  @MessagePattern(TreatmentCategoryMessage.UPDATE_TREATMENT_CATEGORY)
+  async update(@Payload() dto: UpdateTreatmentCateogry) {
+    return await this.treatmentCategoryService.update(dto);
   }
 }
