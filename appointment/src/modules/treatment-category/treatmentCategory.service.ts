@@ -44,6 +44,9 @@ export class TreatmentCategoryService {
   }
 
   async findOne(id: number): Promise<TreatmentCategory | null> {
-    return await this.treatmentCategoryRepository.findOne({ where: { id } });
+    return await this.treatmentCategoryRepository.findOne({
+      where: { id },
+      relations: ['parent'],
+    });
   }
 }

@@ -41,4 +41,17 @@ export class TreatmentCategoryService {
       ),
     );
   }
+
+  async findOne(id: number): Promise<TreatmentCategory> {
+    const treatmentCategory: TreatmentCategory = await lastValueFrom(
+      this.appointmentClient.send(
+        TreatmentCategoryMessagePattern.FIND_ONE_TREATMENT_CATEGORY,
+        { id },
+      ),
+    );
+
+    if (!treatmentCategory) exeptionFilter(404, 'treatment-category not found');
+
+    return treatmentCategory;
+  }
 }
