@@ -4,6 +4,7 @@ import { TypeOrmConfig } from 'src/configs/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { DoctorModule } from '../doctor/doctor.module';
 import { AttendanceModule } from '../attendance/attendance.module';
+import { TreatmentCategoryModule } from '../treatment-category/treatmentCategory.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AttendanceModule } from '../attendance/attendance.module';
     }),
     DoctorModule,
     AttendanceModule,
+    TreatmentCategoryModule,
   ],
   providers: [TypeOrmConfig],
 })
