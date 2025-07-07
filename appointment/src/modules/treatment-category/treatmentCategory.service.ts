@@ -4,6 +4,7 @@ import { TreatmentCategory } from './entities/treatmentCategory.entity';
 import { Repository } from 'typeorm';
 import { CreateTreatmentCategory } from './dto/create-treatmentCategory.type';
 import { execptionError } from 'src/common/@types/eception.type';
+import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class TreatmentCategoryService {
@@ -21,5 +22,12 @@ export class TreatmentCategoryService {
     } catch (e) {
       return { message: e.message, status: 400 };
     }
+  }
+
+  async findAll(query: PaginateQuery): Promise<Paginated<TreatmentCategory>> {
+    return await paginate(query, this.treatmentCategoryRepository, {
+      sortableColumns: ['createdAt'],
+      defaultSortBy: [['createdAt', 'DESC']],
+    });
   }
 }
