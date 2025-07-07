@@ -15,7 +15,7 @@ export class TreatmentCategory extends Base {
     { cascade: true },
   )
   @JoinColumn({ name: 'parentId' })
-  TreatmentCategory: TreatmentCategory;
+  parent: TreatmentCategory;
 
   @Column({ nullable: true })
   parentId: number;
