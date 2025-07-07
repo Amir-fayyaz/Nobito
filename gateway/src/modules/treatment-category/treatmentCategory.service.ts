@@ -5,6 +5,8 @@ import { CreateTreatmentCategoryDto } from './dto/create-treatmentCategory.dto';
 import { lastValueFrom } from 'rxjs';
 import { TreatmentCategoryMessagePattern } from 'src/common/constants/message-patterns';
 import { TreatmentCategory } from './models/treatmentCategory.model';
+import { exeptionFilter } from 'src/common/filters/exeption-filter';
+import { Exeption } from 'src/common/@types/exeption-type.type';
 
 @Injectable()
 export class TreatmentCategoryService {
@@ -13,12 +15,18 @@ export class TreatmentCategoryService {
     private readonly appointmentClient: ClientProxy,
   ) {}
 
-  async create(dto: CreateTreatmentCategoryDto): Promise<TreatmentCategory> {
-    return await lastValueFrom(
-      this.appointmentClient.send(
-        TreatmentCategoryMessagePattern.CREATE_TREATMENT_CATEGORY,
-        dto,
-      ),
-    );
+  async create(
+    dto: CreateTreatmentCategoryDto,
+  ): Promise<TreatmentCategory | Exeption | undefined> {
+    try {
+      return await lastValueFrom(
+        this.appointmentClient.send(
+          TreatmentCategoryMessagePattern.CREATE_TREATMENT_CATEGORY,
+          dto,
+        ),
+      );
+    } catch (e) {
+      exeptionFilter(400, e.message);
+    }
   }
 }
