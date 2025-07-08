@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { TreatmentCategoryService } from './treatmentCategory.service';
 import { CreateTreatmentCategoryDto } from './dto/create-treatmentCategory.dto';
@@ -13,6 +14,7 @@ import { TreatmentCategory } from './models/treatmentCategory.model';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { PaginateTreatmentCategoryResponse } from './dto/paginate-treatmentCategory-response.dto';
 import { PaginationOptions } from 'src/common/decorators/pagination-options.decorator';
+import { UpdateTreatmentCategoryDto } from './dto/update-treatmentCategory.dto';
 
 @Controller('api/v1/treatment-category')
 export class TreatmentCategoryController {
@@ -39,5 +41,13 @@ export class TreatmentCategoryController {
   @ApiOkResponse({ type: TreatmentCategory })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.treatmentCategoryService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateTreatmentCategoryDto,
+  ) {
+    return await this.treatmentCategoryService.update(id, dto);
   }
 }
