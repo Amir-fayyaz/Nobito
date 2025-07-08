@@ -62,9 +62,7 @@ export class TreatmentCategoryService {
           { id: dto.id },
           { ...dto },
         )
-      ).affected === 0
-        ? { status: 404, message: 'Treatment-category not found' }
-        : { id: dto.id };
+      ).affected;
     } catch (error) {
       return { message: error.message, status: 404 };
     }
