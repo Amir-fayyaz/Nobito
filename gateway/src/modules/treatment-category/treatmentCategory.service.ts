@@ -8,6 +8,7 @@ import { TreatmentCategory } from './models/treatmentCategory.model';
 import { exeptionFilter } from 'src/common/filters/exeption-filter';
 import { Exeption } from 'src/common/@types/exeption-type.type';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
+import { UpdateTreatmentCategoryDto } from './dto/update-treatmentCategory.dto';
 
 @Injectable()
 export class TreatmentCategoryService {
@@ -53,5 +54,22 @@ export class TreatmentCategoryService {
     if (!treatmentCategory) exeptionFilter(404, 'treatment-category not found');
 
     return treatmentCategory;
+  }
+
+  async update(id: number, dto: UpdateTreatmentCategoryDto) {
+    try {
+      const updateResult = await lastValueFrom(
+        this.appointmentClient.send(
+          TreatmentCategoryMessagePattern.UPDATE_TREATMENT_CATEGORY,
+          { id, ...dto },
+        ),
+      );
+
+      if (!updateResult) exeptionFilter(404, 'treatment-cateogry not found');
+
+      return updateResult;
+    } catch (error) {
+      exeptionFilter(error.status, error.message);
+    }
   }
 }
