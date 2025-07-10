@@ -8,6 +8,7 @@ import { TreatmentCategoryMessage } from 'apps/appointment/src/common/constants/
 import { CreateTreatmentCategory } from '../dto/create-treatmentCategory.type';
 import { FindOneTreatmentCategory } from '../dto/find-one-treatmentCategory.type';
 import { UpdateTreatmentCateogry } from '../dto/update-treatmentCategory.type';
+import { RemoveById } from 'libs/@types/public';
 
 export class TreatmentCategoryController {
   constructor(
@@ -34,5 +35,9 @@ export class TreatmentCategoryController {
   @MessagePattern(TreatmentCategoryMessage.UPDATE_TREATMENT_CATEGORY)
   async update(@Payload() dto: UpdateTreatmentCateogry) {
     return await this.treatmentCategoryService.update(dto);
+  }
+  @MessagePattern(TreatmentCategoryMessage.DELETE_TREATMENT_CATEGORY)
+  async remove(@Payload() { id }: RemoveById) {
+    return await this.treatmentCategoryService.remove(id);
   }
 }
