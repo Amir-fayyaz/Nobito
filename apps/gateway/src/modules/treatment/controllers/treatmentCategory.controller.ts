@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -49,5 +50,10 @@ export class TreatmentCategoryController {
     @Body() dto: UpdateTreatmentCategoryDto,
   ) {
     return await this.treatmentCategoryService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.treatmentCategoryService.remove(id);
   }
 }
