@@ -1,5 +1,6 @@
 import { Base } from 'libs/entities';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { Patient } from './patient.entity';
 
 @Entity()
 export class Medications extends Base {
@@ -16,6 +17,9 @@ export class Medications extends Base {
   endDate: string;
 
   //! relation to patient
+
+  @ManyToOne(() => Patient, (patient) => patient.medications)
+  patient: Patient;
   @Column()
   patientId: number;
 }
