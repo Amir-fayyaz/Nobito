@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Attendance } from 'apps/appointment/src/modules/attendance/entities/attendance.entity';
 import { Doctor } from 'apps/appointment/src/modules/doctor/entities/doctor.entity';
+import { SpecialDisease } from 'apps/appointment/src/modules/patient/entities/specialDisease.entity';
 import { TreatmentCategory } from 'apps/appointment/src/modules/treatment/entities/treatmentCategory.entity';
 import { Position } from 'apps/user/src/modules/auth/entities/position.entity';
 import { Role } from 'apps/user/src/modules/auth/entities/role.entity';
@@ -32,6 +33,7 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
         Attendance,
         Doctor,
         TreatmentCategory,
+        SpecialDisease,
       ],
 
       synchronize: process.env.NODE_ENV === 'production',
