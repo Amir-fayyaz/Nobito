@@ -68,6 +68,10 @@ export class TreatmentCategoryService {
     }
   }
 
+  async remove(id: number) {
+    return (await this.treatmentCategoryRepository.delete({ id })).affected;
+  }
+
   async exist(id: number): Promise<void> {
     const result = await this.treatmentCategoryRepository.exists({
       where: { id },
