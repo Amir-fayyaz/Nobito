@@ -7,8 +7,8 @@ import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdateTreatmentCategoryDto } from '../dto/update-treatmentCategory.dto';
 import { AppointmentRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { TreatmentCategoryMessagePattern } from 'apps/gateway/src/common/constants/message-patterns';
-import { Exeption } from 'apps/gateway/src/common/@types/exeption-type.type';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
+import { ExeptionError } from 'libs/@types/public';
 
 @Injectable()
 export class TreatmentCategoryService {
@@ -19,7 +19,7 @@ export class TreatmentCategoryService {
 
   async create(
     dto: CreateTreatmentCategoryDto,
-  ): Promise<TreatmentCategory | Exeption | void> {
+  ): Promise<TreatmentCategory | ExeptionError | void> {
     try {
       const result = await lastValueFrom(
         this.appointmentClient.send(
@@ -71,5 +71,18 @@ export class TreatmentCategoryService {
     } catch (error) {
       exeptionFilter(error.status, error.message);
     }
+  }
+
+  async remove(id: number): Promise<ExeptionError | number> {
+    const deleteResult: number = await lastValueFrom(
+      this.appointmentClient.send(
+        TreatmentCategoryMessagePattern.DELETE_TREATMENT_CATEGORY,
+        { id },
+      ),
+    );
+
+    if (!deleteResult) exeptionFilter(404);
+
+    return id;
   }
 }
