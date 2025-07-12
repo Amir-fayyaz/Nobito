@@ -5,6 +5,7 @@ import { DoctorModule } from '../doctor/doctor.module';
 import { AttendanceModule } from '../attendance/attendance.module';
 import { TreatmentCategoryModule } from '../treatment/treatmentCategory.module';
 import { TypeOrmConfig } from 'libs/configs/db';
+import { PatientModule } from '../patient/patient.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TypeOrmConfig } from 'libs/configs/db';
     DoctorModule,
     AttendanceModule,
     TreatmentCategoryModule,
+    PatientModule,
   ],
   providers: [TypeOrmConfig],
 })
