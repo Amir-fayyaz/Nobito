@@ -3,6 +3,7 @@ import { Attendance } from 'apps/appointment/src/modules/attendance/entities/att
 import { Doctor } from 'apps/appointment/src/modules/doctor/entities/doctor.entity';
 import { AlergyHistory } from 'apps/appointment/src/modules/patient/entities/alergy-history.entity';
 import { Medications } from 'apps/appointment/src/modules/patient/entities/medications.entity';
+import { PatientStatus } from 'apps/appointment/src/modules/patient/entities/patient-status.entity';
 import { Patient } from 'apps/appointment/src/modules/patient/entities/patient.entity';
 import { SpecialDisease } from 'apps/appointment/src/modules/patient/entities/specialDisease.entity';
 import { SurgeryHistory } from 'apps/appointment/src/modules/patient/entities/surgery-history.entity';
@@ -42,6 +43,7 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
         AlergyHistory,
         Medications,
         SurgeryHistory,
+        PatientStatus,
       ],
 
       synchronize: process.env.NODE_ENV === 'production',
