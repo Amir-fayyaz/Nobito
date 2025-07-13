@@ -10,6 +10,7 @@ import { AttendanceModule } from '../attendance/attendance.module';
 import { TreatmentCategoryModule } from '../treatment/treatmentCategory.module';
 import { RedisModule } from '../../common/modules/redis.module';
 import { AppCacheModule } from '../../common/modules/cache.module';
+import { PatientModule } from '../patient/patient.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AppCacheModule } from '../../common/modules/cache.module';
     DoctorModule,
     AttendanceModule,
     TreatmentCategoryModule,
+    PatientModule,
   ],
   controllers: [AppController],
   providers: [AppService],
