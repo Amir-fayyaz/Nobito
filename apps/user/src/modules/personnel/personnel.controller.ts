@@ -8,7 +8,7 @@ import { FindOneById } from './dto/find-one-by-id.type';
 import { FindAllPersonnel } from './dto/find-all-personnel.type';
 import { UpdatePersonnel } from './dto/update-personnel.type';
 import { RemovePersonnel } from './dto/remove-personnel.type';
-import { PersonnelMessage } from '../../common/message-patterns/personnel-messages';
+import { PersonnelMessage } from 'libs/message-patterns';
 
 export class PersonnelController {
   constructor(
@@ -17,27 +17,27 @@ export class PersonnelController {
     private readonly personnelRepo: Repository<Personnel>,
   ) {}
 
-  @MessagePattern(PersonnelMessage.CREATE_PERSONNEL)
+  @MessagePattern(PersonnelMessage.CREATE)
   async create(@Payload() dto: CreatePersonnel) {
     return await this.personnelService.create(dto);
   }
 
-  @MessagePattern(PersonnelMessage.GET_PERSONNEL_BY_ID)
+  @MessagePattern(PersonnelMessage.FIND_ONE)
   async findOne(@Payload() { id }: FindOneById) {
     return await this.personnelService.findOneById(id);
   }
 
-  @MessagePattern(PersonnelMessage.GET_ALL_PERSONNEL)
+  @MessagePattern(PersonnelMessage.FIND_ALL)
   async findAll(@Payload() { query }: FindAllPersonnel) {
     return await this.personnelService.findAll(query);
   }
 
-  @MessagePattern(PersonnelMessage.UPDATE_PERSONNEL)
+  @MessagePattern(PersonnelMessage.UPDATE)
   async update(@Payload() dto: UpdatePersonnel) {
     return await this.personnelService.update(dto);
   }
 
-  @MessagePattern(PersonnelMessage.DELETE_PERSONNEL)
+  @MessagePattern(PersonnelMessage.DELETE)
   async remove(@Payload() { id }: RemovePersonnel) {
     return await this.personnelService.remove(id);
   }

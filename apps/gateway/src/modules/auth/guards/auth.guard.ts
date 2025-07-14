@@ -7,12 +7,9 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtPayload } from 'apps/gateway/src/common/@types/jwt-payload.type';
-import {
-  JwtMessagePattern,
-  UserMessagePattern,
-} from 'apps/gateway/src/common/constants/message-patterns';
 import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { Request } from 'express';
+import { JwtMessage, UserMessages } from 'libs/message-patterns';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
@@ -27,7 +24,7 @@ export class AuthGuard implements CanActivate {
       const payload = await this.validateToken(token);
 
       const user = await lastValueFrom(
-        this.userClient.send(UserMessagePattern.GET_USER_BY_ID, {
+        this.userClient.send(UserMessages.FIND_ONE, {
           id: payload.sub,
         }),
       );
@@ -58,7 +55,7 @@ export class AuthGuard implements CanActivate {
 
   private async validateToken(token: string): Promise<JwtPayload> {
     const validateResult = await lastValueFrom(
-      this.userClient.send(JwtMessagePattern.VERIFY_TOKEN, { token }),
+      this.userClient.send(JwtMessage.VERIFY_TOKEN, { token }),
     );
 
     if (validateResult.status === 401)

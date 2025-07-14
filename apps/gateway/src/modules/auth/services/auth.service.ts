@@ -13,8 +13,8 @@ import { RegisterByEmail } from '../dto/register-by-email.dto';
 import { VerifyByEmail } from '../dto/verify-by-email.dto';
 import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { CacheService } from 'apps/gateway/src/common/services/cache.service';
-import { AuthMessagePattern } from 'apps/gateway/src/common/constants/message-patterns';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
+import { AuthMessages } from 'libs/message-patterns';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +32,7 @@ export class AuthService {
       }
 
       const res: RegisterByPhonePayload = await lastValueFrom(
-        this.userClient.send(AuthMessagePattern.REGISTER_BY_PHONE, { phone }),
+        this.userClient.send(AuthMessages.REGISTER_BY_PHONE, { phone }),
       );
 
       if (res.status) exeptionFilter(res.status);
@@ -58,7 +58,7 @@ export class AuthService {
 
     try {
       const token: string = await lastValueFrom(
-        this.userClient.send(AuthMessagePattern.VERIFY_BY_PHONE, { phone }),
+        this.userClient.send(AuthMessages.VERIFY_BY_PHONE, { phone }),
       );
       await this.cacheService.del(`otp:${phone}`);
 
@@ -76,7 +76,7 @@ export class AuthService {
     if (cache) return { otp: cache };
 
     const res = await lastValueFrom(
-      this.userClient.send(AuthMessagePattern.REGISTER_BY_EMAIL, { email }),
+      this.userClient.send(AuthMessages.REGISTER_BY_EMAIL, { email }),
     );
 
     if (res.status) exeptionFilter(res.status);
@@ -98,7 +98,7 @@ export class AuthService {
 
     await this.cacheService.del(`otp:${email}`);
     return await lastValueFrom(
-      this.userClient.send(AuthMessagePattern.VERIFY_BY_EMAIL, { email }),
+      this.userClient.send(AuthMessages.VERIFY_BY_EMAIL, { email }),
     );
   }
 }

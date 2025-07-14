@@ -6,9 +6,9 @@ import { Attendance } from './models/attendance.model';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import { AppointmentRabbitmq } from '../../common/constants/rabbitmq';
-import { AttendanceMessagePattern } from '../../common/constants/message-patterns';
 import { exeptionFilter } from '../../common/filters/exeption-filter';
 import { Exeption } from '../../common/@types/exeption-type.type';
+import { AttendanceMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class AttendanceService {
@@ -19,7 +19,7 @@ export class AttendanceService {
 
   async create(dto: CreateAttendanceDto): Promise<Attendance | Exeption> {
     const createResult = await lastValueFrom(
-      this.AppointmentClient.send(AttendanceMessagePattern.CREATE_ATTENDANCE, {
+      this.AppointmentClient.send(AttendanceMessage.CREATE, {
         ...dto,
       }),
     );
@@ -32,19 +32,13 @@ export class AttendanceService {
 
   async findAll(query: PaginateQuery): Promise<Paginated<Attendance>> {
     return await lastValueFrom(
-      this.AppointmentClient.send(
-        AttendanceMessagePattern.FIND_ALL_ATTENDANCE,
-        { query },
-      ),
+      this.AppointmentClient.send(AttendanceMessage.FIND_ALL, { query }),
     );
   }
 
   async findOne(id: number): Promise<Attendance | Exeption> {
     const attendance = await lastValueFrom(
-      this.AppointmentClient.send(
-        AttendanceMessagePattern.FIND_ONE_ATTENDANCE,
-        { id },
-      ),
+      this.AppointmentClient.send(AttendanceMessage.FIND_ONE, { id }),
     );
 
     if (!attendance) exeptionFilter(404);
@@ -54,7 +48,7 @@ export class AttendanceService {
 
   async update(id: number, dto: UpdateAttendanceDto) {
     const updateResult = await lastValueFrom(
-      this.AppointmentClient.send(AttendanceMessagePattern.UPDATE_ATTENDANCE, {
+      this.AppointmentClient.send(AttendanceMessage.UPDATE, {
         id,
         ...dto,
       }),
@@ -70,7 +64,7 @@ export class AttendanceService {
 
   async remove(id: number): Promise<number> {
     const removeResult: number = await lastValueFrom(
-      this.AppointmentClient.send(AttendanceMessagePattern.DELETE_ATTENDANCE, {
+      this.AppointmentClient.send(AttendanceMessage.DELETE, {
         id,
       }),
     );

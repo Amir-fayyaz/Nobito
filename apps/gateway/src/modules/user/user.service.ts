@@ -10,8 +10,8 @@ import { lastValueFrom } from 'rxjs';
 import { User } from './models/user.model';
 import { UserRabbitmq } from '../../common/constants/rabbitmq';
 import { Exeption } from '../../common/@types/exeption-type.type';
-import { UserMessagePattern } from '../../common/constants/message-patterns';
 import { exeptionFilter } from '../../common/filters/exeption-filter';
+import { UserMessages } from 'libs/message-patterns';
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
   ): Promise<Paginated<User> | Exeption | undefined> {
     try {
       return await lastValueFrom(
-        this.userClient.send(UserMessagePattern.GETALLUSERS, {
+        this.userClient.send(UserMessages.FIND_ALL, {
           params,
         }),
       );
@@ -36,7 +36,7 @@ export class UserService {
 
   async findOneById(id: number): Promise<User> {
     const res = await lastValueFrom(
-      this.userClient.send(UserMessagePattern.GET_USER_BY_ID, { id }),
+      this.userClient.send(UserMessages.FIND_ONE, { id }),
     );
 
     if (!res) exeptionFilter(404);

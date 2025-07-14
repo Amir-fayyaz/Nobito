@@ -4,11 +4,11 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaginateQuery } from 'nestjs-paginate';
 import { TreatmentCategory } from '../entities/treatmentCategory.entity';
 import { TreatmentCategoryService } from '../services/treatmentCategory.service';
-import { TreatmentCategoryMessage } from 'apps/appointment/src/common/constants/message-patterns/treatment-category.messages';
 import { CreateTreatmentCategory } from '../dto/create-treatmentCategory.type';
 import { FindOneTreatmentCategory } from '../dto/find-one-treatmentCategory.type';
 import { UpdateTreatmentCateogry } from '../dto/update-treatmentCategory.type';
 import { RemoveById } from 'libs/@types/public';
+import { TreatmentCategoryMessage } from 'libs/message-patterns';
 
 export class TreatmentCategoryController {
   constructor(
@@ -17,26 +17,26 @@ export class TreatmentCategoryController {
     private readonly treatmentCategoryService: TreatmentCategoryService,
   ) {}
 
-  @MessagePattern(TreatmentCategoryMessage.CREATE_TREATMENT_CATEGORY)
+  @MessagePattern(TreatmentCategoryMessage.CREATE)
   async create(@Payload() dto: CreateTreatmentCategory) {
     return await this.treatmentCategoryService.create(dto);
   }
 
-  @MessagePattern(TreatmentCategoryMessage.FINDALL_TREATMENT_CATEGORY)
+  @MessagePattern(TreatmentCategoryMessage.FINDALL)
   async findAll(@Payload() query: PaginateQuery) {
     return await this.treatmentCategoryService.findAll(query);
   }
 
-  @MessagePattern(TreatmentCategoryMessage.FIND_ONE_TREATMENT_CATEGORY)
+  @MessagePattern(TreatmentCategoryMessage.FIND_ONE)
   async findOne(@Payload() { id }: FindOneTreatmentCategory) {
     return await this.treatmentCategoryService.findOne(id);
   }
 
-  @MessagePattern(TreatmentCategoryMessage.UPDATE_TREATMENT_CATEGORY)
+  @MessagePattern(TreatmentCategoryMessage.UPDATE)
   async update(@Payload() dto: UpdateTreatmentCateogry) {
     return await this.treatmentCategoryService.update(dto);
   }
-  @MessagePattern(TreatmentCategoryMessage.DELETE_TREATMENT_CATEGORY)
+  @MessagePattern(TreatmentCategoryMessage.DELETE)
   async remove(@Payload() { id }: RemoveById) {
     return await this.treatmentCategoryService.remove(id);
   }

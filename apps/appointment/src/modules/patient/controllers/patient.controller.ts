@@ -1,10 +1,10 @@
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PatientService } from '../services/patient.service';
-import { PatientMessage } from 'apps/appointment/src/common/constants/message-patterns/patient.messages';
 import { CreatePatient } from '../dto/create-patient.type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Patient } from '../entities/patient.entity';
 import { Repository } from 'typeorm';
+import { PatientMessage } from 'libs/message-patterns';
 
 export class PatientController {
   constructor(

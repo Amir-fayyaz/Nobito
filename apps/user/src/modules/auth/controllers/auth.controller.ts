@@ -7,7 +7,7 @@ import { VerifyByPhone } from '../dto/verifyByPhone.type';
 import { RegisterByEmail } from '../dto/registerByEmail.type';
 import { VerifyByEmail } from '../dto/verify-by-email.type';
 import { User } from '../../user/entities/user.entity';
-import { AuthMessages } from 'apps/user/src/common/message-patterns/auth-messages';
+import { AuthMessages } from 'libs/message-patterns';
 
 export class AuthController {
   constructor(
