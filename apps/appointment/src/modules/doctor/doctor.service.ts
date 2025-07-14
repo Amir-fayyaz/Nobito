@@ -9,7 +9,7 @@ import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdateDoctor } from './dto/update-doctor.type';
 import { RabbitmqEnviroments } from '../../common/constants/rabbitmq';
 import { generateDoctorNumber } from '../../common/utility/set-doctorNumber';
-import { PersonnelMessage } from '../../common/constants/message-patterns/personnel.messages';
+import { PersonnelMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class DoctorService {

@@ -9,7 +9,8 @@ import { CreateRoleDto } from '../dto/create-role.dto';
 import { lastValueFrom } from 'rxjs';
 import { UpdateRoleDto } from '../dto/update-role.dto';
 import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
-import { RoleMessagePattern } from 'apps/gateway/src/common/constants/message-patterns';
+import { RoleMessage } from 'libs/message-patterns';
+import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
 
 @Injectable()
 export class RoleService {
@@ -20,10 +21,10 @@ export class RoleService {
 
   async create(dto: CreateRoleDto) {
     const newRole = await lastValueFrom(
-      this.userClient.send(RoleMessagePattern.CREATE_ROLE, dto),
+      this.userClient.send(RoleMessage.CREATE, dto),
     );
 
-    if (newRole.status === 409) throw new ConflictException();
+    if (newRole.status) exeptionFilter(newRole.status);
 
     return {
       role: newRole,
@@ -31,14 +32,12 @@ export class RoleService {
   }
 
   async findAll() {
-    return await lastValueFrom(
-      this.userClient.send(RoleMessagePattern.GET_ALL_ROLES, {}),
-    );
+    return await lastValueFrom(this.userClient.send(RoleMessage.FIND_ALL, {}));
   }
 
   async findOne(id: number) {
     const role = await lastValueFrom(
-      this.userClient.send(RoleMessagePattern.FIND_ROLE_BY_ID, { id }),
+      this.userClient.send(RoleMessage.FIND_ONE, { id }),
     );
 
     if (role.status === 404) throw new NotFoundException('role not found');
@@ -48,10 +47,10 @@ export class RoleService {
 
   async update(dto: UpdateRoleDto, id: number) {
     const updateResult = await lastValueFrom(
-      this.userClient.send(RoleMessagePattern.UPDATE_ROLE, { ...dto, id }),
+      this.userClient.send(RoleMessage.UPDATE, { ...dto, id }),
     );
 
-    if (updateResult.status === 409) throw new ConflictException();
+    if (updateResult.status) exeptionFilter(updateResult.status);
 
     return {
       message: 'updated-successfully',
@@ -60,10 +59,10 @@ export class RoleService {
 
   async remove(id: number) {
     const deleteResult = await lastValueFrom(
-      this.userClient.send(RoleMessagePattern.DELETE_ROLE, { id }),
+      this.userClient.send(RoleMessage.DELETE, { id }),
     );
 
-    if (deleteResult.status === 404) throw new NotFoundException();
+    if (deleteResult.status) exeptionFilter(deleteResult.status);
 
     return {
       message: 'deleted-successfully',

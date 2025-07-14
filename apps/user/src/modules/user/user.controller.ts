@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserType } from './types/create-user.type';
-import { UserMessages } from '../../common/message-patterns/user-messages';
+import { UserMessages } from 'libs/message-patterns';
 
 export class UserController {
   constructor(
@@ -14,7 +14,7 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
-  @MessagePattern(UserMessages.GETALLUSERS)
+  @MessagePattern(UserMessages.FIND_ALL)
   async getAll(@Payload() queryParams: PaginateQuery) {
     try {
       return await this.userService.getAll(queryParams);
@@ -23,12 +23,12 @@ export class UserController {
     }
   }
 
-  @MessagePattern(UserMessages.GETUSER_BY_ID)
+  @MessagePattern(UserMessages.FIND_ONE)
   async findOneById(@Payload() { id }) {
     return await this.userService.findOneById(id);
   }
 
-  @MessagePattern(UserMessages.CREATE_USER)
+  @MessagePattern(UserMessages.CREATE)
   async create(@Payload() data: CreateUserType) {
     return await this.userService.create(data);
   }

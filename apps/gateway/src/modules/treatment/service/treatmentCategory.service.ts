@@ -6,9 +6,9 @@ import { TreatmentCategory } from '../models/treatmentCategory.model';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdateTreatmentCategoryDto } from '../dto/update-treatmentCategory.dto';
 import { AppointmentRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
-import { TreatmentCategoryMessagePattern } from 'apps/gateway/src/common/constants/message-patterns';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
 import { ExeptionError } from 'libs/@types/public';
+import { TreatmentCategoryMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class TreatmentCategoryService {
@@ -22,10 +22,7 @@ export class TreatmentCategoryService {
   ): Promise<TreatmentCategory | ExeptionError | void> {
     try {
       const result = await lastValueFrom(
-        this.appointmentClient.send(
-          TreatmentCategoryMessagePattern.CREATE_TREATMENT_CATEGORY,
-          dto,
-        ),
+        this.appointmentClient.send(TreatmentCategoryMessage.CREATE, dto),
       );
       if (result.status) exeptionFilter(result.status, result.message);
       return result;
@@ -36,19 +33,13 @@ export class TreatmentCategoryService {
 
   async findAll(query: PaginateQuery): Promise<Paginated<TreatmentCategory>> {
     return await lastValueFrom(
-      this.appointmentClient.send(
-        TreatmentCategoryMessagePattern.FINDALL_TREATMENT_CATEGORY,
-        query,
-      ),
+      this.appointmentClient.send(TreatmentCategoryMessage.FINDALL, query),
     );
   }
 
   async findOne(id: number): Promise<TreatmentCategory> {
     const treatmentCategory: TreatmentCategory = await lastValueFrom(
-      this.appointmentClient.send(
-        TreatmentCategoryMessagePattern.FIND_ONE_TREATMENT_CATEGORY,
-        { id },
-      ),
+      this.appointmentClient.send(TreatmentCategoryMessage.FIND_ONE, { id }),
     );
 
     if (!treatmentCategory) exeptionFilter(404, 'treatment-category not found');
@@ -59,10 +50,10 @@ export class TreatmentCategoryService {
   async update(id: number, dto: UpdateTreatmentCategoryDto) {
     try {
       const updateResult = await lastValueFrom(
-        this.appointmentClient.send(
-          TreatmentCategoryMessagePattern.UPDATE_TREATMENT_CATEGORY,
-          { id, ...dto },
-        ),
+        this.appointmentClient.send(TreatmentCategoryMessage.UPDATE, {
+          id,
+          ...dto,
+        }),
       );
 
       if (!updateResult) exeptionFilter(404, 'treatment-cateogry not found');
@@ -75,10 +66,7 @@ export class TreatmentCategoryService {
 
   async remove(id: number): Promise<ExeptionError | number> {
     const deleteResult: number = await lastValueFrom(
-      this.appointmentClient.send(
-        TreatmentCategoryMessagePattern.DELETE_TREATMENT_CATEGORY,
-        { id },
-      ),
+      this.appointmentClient.send(TreatmentCategoryMessage.DELETE, { id }),
     );
 
     if (!deleteResult) exeptionFilter(404);

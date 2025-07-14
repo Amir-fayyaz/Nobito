@@ -14,7 +14,7 @@ import {
 import { UpdateAttendance } from './dto/update-attendance.type';
 import { RabbitmqEnviroments } from '../../common/constants/rabbitmq';
 import { execptionError } from '../../common/@types/eception.type';
-import { PersonnelMessage } from '../../common/constants/message-patterns/personnel.messages';
+import { PersonnelMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class AttendanceService {

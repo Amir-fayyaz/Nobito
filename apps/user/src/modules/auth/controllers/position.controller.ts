@@ -7,7 +7,7 @@ import { CreatePositon } from '../dto/create-position.type';
 import { FindById } from '../dto/fine-one-by-id.type';
 import { UpdatePosition } from '../dto/update-position.type';
 import { RemovePosition } from '../dto/remove-position.type';
-import { PositionMessage } from 'apps/user/src/common/message-patterns/position-messages';
+import { PositionMessage } from 'libs/message-patterns';
 
 export class PositionController {
   constructor(
@@ -16,27 +16,27 @@ export class PositionController {
     private readonly positionService: PositionService,
   ) {}
 
-  @MessagePattern(PositionMessage.CREATE_POSITION)
+  @MessagePattern(PositionMessage.CREATE)
   async create(@Payload() dto: CreatePositon) {
     return await this.positionService.create(dto);
   }
 
-  @MessagePattern(PositionMessage.GET_ALL_POSITIONS)
+  @MessagePattern(PositionMessage.FIND_ALL)
   async findAll() {
     return await this.positionService.findAll();
   }
 
-  @MessagePattern(PositionMessage.FIND_ONE_BY_ID)
+  @MessagePattern(PositionMessage.FIND_ONE)
   async findOne(@Payload() { id }: FindById) {
     return await this.positionService.findOne(id);
   }
 
-  @MessagePattern(PositionMessage.UPDATE_POSITION)
+  @MessagePattern(PositionMessage.UPDATE)
   async update(@Payload() dto: UpdatePosition) {
     return await this.positionService.update(dto);
   }
 
-  @MessagePattern(PositionMessage.DELETE_POSITION)
+  @MessagePattern(PositionMessage.DELETE)
   async remove(@Payload() { id }: RemovePosition) {
     return await this.positionService.remove(id);
   }
