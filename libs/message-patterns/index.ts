@@ -8,3 +8,4 @@ export * from './position.messages';
 export * from './role.messages';
 export * from './user.messages';
 export * from './file.messages';
+export * from './jwt.messages';
