@@ -1,18 +1,12 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreatePositionDto } from '../dto/create-position.dto';
 import { lastValueFrom } from 'rxjs';
 import { Position } from '../models/position.model';
-import { Paginated } from 'nestjs-paginate';
 import { UpdatePositionDto } from '../dto/update-position.dto';
 import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
-import { PositionMessagePattern } from 'apps/gateway/src/common/constants/message-patterns';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
+import { PositionMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class PositionService {
@@ -23,7 +17,7 @@ export class PositionService {
 
   async create(dto: CreatePositionDto): Promise<Position> {
     const createResult = await lastValueFrom(
-      this.userClient.send(PositionMessagePattern.CREATE_POSITION, dto),
+      this.userClient.send(PositionMessage.CREATE, dto),
     );
 
     if (createResult.status) exeptionFilter(createResult.status);
@@ -33,23 +27,23 @@ export class PositionService {
 
   async findAll(): Promise<Position[]> {
     return await lastValueFrom(
-      this.userClient.send(PositionMessagePattern.GET_ALL_POSITIONS, {}),
+      this.userClient.send(PositionMessage.FIND_ALL, {}),
     );
   }
 
   async findOne(id: number): Promise<Position> {
     const position = await lastValueFrom(
-      this.userClient.send(PositionMessagePattern.FIND_ONE_BY_ID, { id }),
+      this.userClient.send(PositionMessage.FIND_ONE, { id }),
     );
 
-    if (position.status === 404) throw new NotFoundException();
+    if (position.status) exeptionFilter(position.status);
 
     return position;
   }
 
   async update(dto: UpdatePositionDto, id: number) {
     const updatedResult = await lastValueFrom(
-      this.userClient.send(PositionMessagePattern.UPDATE_POSITION, {
+      this.userClient.send(PositionMessage.UPDATE, {
         ...dto,
         id,
       }),
@@ -63,10 +57,10 @@ export class PositionService {
 
   async remove(id: number) {
     const deleteResult = await lastValueFrom(
-      this.userClient.send(PositionMessagePattern.DELETE_POSITION, { id }),
+      this.userClient.send(PositionMessage.DELETE, { id }),
     );
 
-    if (deleteResult.status === 404) exeptionFilter(deleteResult.status);
+    if (deleteResult.status) exeptionFilter(deleteResult.status);
 
     return deleteResult;
   }

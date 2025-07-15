@@ -12,9 +12,9 @@ import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdatePersonnelDto } from './dto/update-personnel.dto';
 import { Personnel } from './models/personnel.model';
 import { UserRabbitmq } from '../../common/constants/rabbitmq';
-import { PersonnelMessagePattern } from '../../common/constants/message-patterns';
 import { exeptionFilter } from '../../common/filters/exeption-filter';
 import { S3Service } from '../../common/services/S3.service';
+import { PersonnelMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class PersonnelService {
@@ -31,7 +31,7 @@ export class PersonnelService {
     const { url } = await this.s3service.uploadFile(resume);
 
     return await lastValueFrom(
-      this.userClient.send(PersonnelMessagePattern.CREATE_PERSONNEL, {
+      this.userClient.send(PersonnelMessage.CREATE, {
         ...dto,
         resume: url,
       }),
@@ -40,7 +40,7 @@ export class PersonnelService {
 
   async findOneById(id: number): Promise<Personnel> {
     const personnel = await lastValueFrom(
-      this.userClient.send(PersonnelMessagePattern.GET_PERSONNEL_BY_ID, { id }),
+      this.userClient.send(PersonnelMessage.FIND_ONE, { id }),
     );
 
     if (!personnel) exeptionFilter(404);
@@ -50,7 +50,7 @@ export class PersonnelService {
 
   async findAll(query: PaginateQuery): Promise<Paginated<Personnel>> {
     return await lastValueFrom(
-      this.userClient.send(PersonnelMessagePattern.GET_ALL_PERSONNEL, {
+      this.userClient.send(PersonnelMessage.FIND_ALL, {
         query,
       }),
     );
@@ -68,7 +68,7 @@ export class PersonnelService {
 
     try {
       const updateResult = await lastValueFrom(
-        this.userClient.send(PersonnelMessagePattern.UPDATE_PERSONNEL, {
+        this.userClient.send(PersonnelMessage.UPDATE, {
           id,
           ...dto,
         }),
@@ -86,7 +86,7 @@ export class PersonnelService {
   async remove(id: number) {
     try {
       const deleteResult = await lastValueFrom(
-        this.userClient.send(PersonnelMessagePattern.DELETE_PERSONNEL, { id }),
+        this.userClient.send(PersonnelMessage.DELETE, { id }),
       );
 
       if (deleteResult.status)

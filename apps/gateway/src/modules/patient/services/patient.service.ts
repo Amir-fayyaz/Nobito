@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { AppointmentRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { CreatePatientDto } from '../dto/create-patient.dto';
-import { PatientMessage } from 'apps/gateway/src/common/constants/message-patterns';
 import { lastValueFrom } from 'rxjs';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
+import { PatientMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class PatientService {

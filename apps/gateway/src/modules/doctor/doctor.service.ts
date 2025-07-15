@@ -8,8 +8,8 @@ import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { DeleteResult } from 'typeorm';
 import { AppointmentRabbitmq } from '../../common/constants/rabbitmq';
 import { Exeption } from '../../common/@types/exeption-type.type';
-import { DoctorMessagePattern } from '../../common/constants/message-patterns';
 import { exeptionFilter } from '../../common/filters/exeption-filter';
+import { DoctorMessage } from 'libs/message-patterns';
 
 @Injectable()
 export class DoctorService {
@@ -21,7 +21,7 @@ export class DoctorService {
   async create(dto: CreateDoctorDto): Promise<Doctor | Exeption | undefined> {
     try {
       const createResult = await lastValueFrom(
-        this.appointmentClient.send(DoctorMessagePattern.CREATE_DOCTOR, {
+        this.appointmentClient.send(DoctorMessage.CREATE, {
           ...dto,
         }),
       );
@@ -36,7 +36,7 @@ export class DoctorService {
 
   async findAll(query: PaginateQuery): Promise<Paginated<Doctor>> {
     return await lastValueFrom(
-      this.appointmentClient.send(DoctorMessagePattern.FIND_ALL_DOCTOR, {
+      this.appointmentClient.send(DoctorMessage.FIND_ALL, {
         query,
       }),
     );
@@ -44,7 +44,7 @@ export class DoctorService {
 
   async findOneById(id: number): Promise<Doctor> {
     const doctor = await lastValueFrom(
-      this.appointmentClient.send(DoctorMessagePattern.FIND_ONE_DOCTOR, { id }),
+      this.appointmentClient.send(DoctorMessage.FIND_ONE, { id }),
     );
 
     if (!doctor) exeptionFilter(404);
@@ -54,7 +54,7 @@ export class DoctorService {
 
   async update(id: number, dto: UpdateDoctorDto): Promise<number> {
     const updateResult = await lastValueFrom(
-      this.appointmentClient.send(DoctorMessagePattern.UPDATE_DOCTOR, {
+      this.appointmentClient.send(DoctorMessage.UPDATE, {
         id,
         personnelId: dto.personnelId,
       }),
@@ -71,7 +71,7 @@ export class DoctorService {
 
   async remove(id: number): Promise<number> {
     const deleteResult: DeleteResult = await lastValueFrom(
-      this.appointmentClient.send(DoctorMessagePattern.DELETE_DOCTOR, { id }),
+      this.appointmentClient.send(DoctorMessage.DELETE_, { id }),
     );
 
     if (!deleteResult.affected) exeptionFilter(404);
