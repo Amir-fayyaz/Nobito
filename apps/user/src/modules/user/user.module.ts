@@ -4,8 +4,8 @@ import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
-import { RabbitMQEnviroments } from '../../common/constants/rabbitmq';
 import { Env } from '../../common/constants/env';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Module({
   imports: [
