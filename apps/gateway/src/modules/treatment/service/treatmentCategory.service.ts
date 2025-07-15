@@ -5,15 +5,15 @@ import { lastValueFrom } from 'rxjs';
 import { TreatmentCategory } from '../models/treatmentCategory.model';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdateTreatmentCategoryDto } from '../dto/update-treatmentCategory.dto';
-import { AppointmentRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
 import { ExeptionError } from 'libs/@types/public';
 import { TreatmentCategoryMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class TreatmentCategoryService {
   constructor(
-    @Inject(AppointmentRabbitmq.AppointmentService_Name)
+    @Inject(RabbitMQEnviroments.AppointmentService_Name)
     private readonly appointmentClient: ClientProxy,
   ) {}
 

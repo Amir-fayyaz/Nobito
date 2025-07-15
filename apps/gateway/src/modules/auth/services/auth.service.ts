@@ -11,15 +11,15 @@ import { RegisterByPhonePayload } from '../types/auth/registerByPhone-response.t
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { RegisterByEmail } from '../dto/register-by-email.dto';
 import { VerifyByEmail } from '../dto/verify-by-email.dto';
-import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { CacheService } from 'apps/gateway/src/common/services/cache.service';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
 import { AuthMessages } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(UserRabbitmq.UserService_Name)
+    @Inject(RabbitMQEnviroments.UserService_Name)
     private readonly userClient: ClientProxy,
     private readonly cacheService: CacheService,
   ) {}

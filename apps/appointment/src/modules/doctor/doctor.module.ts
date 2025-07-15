@@ -4,28 +4,28 @@ import { DoctorService } from './doctor.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Doctor } from './entities/doctor.entity';
-import { RabbitmqEnviroments } from '../../common/constants/rabbitmq';
 import { Env } from '../../common/constants/env';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Doctor]),
     ClientsModule.register([
       {
-        name: RabbitmqEnviroments.AppointmentService_Name,
+        name: RabbitMQEnviroments.AppointmentService_Name,
         transport: Transport.RMQ,
         options: {
           urls: [Env.RABBITMQ_URL as string],
-          queue: RabbitmqEnviroments.Appointment_queue,
+          queue: RabbitMQEnviroments.Appointment_queue,
           queueOptions: { durable: true },
         },
       },
       {
-        name: RabbitmqEnviroments.UserService_Name,
+        name: RabbitMQEnviroments.UserService_Name,
         transport: Transport.RMQ,
         options: {
           urls: [Env.RABBITMQ_URL as string],
-          queue: RabbitmqEnviroments.User_Queue,
+          queue: RabbitMQEnviroments.User_Queue,
           queueOptions: { durable: true },
         },
       },

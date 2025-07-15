@@ -7,16 +7,16 @@ import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { paginate, Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdateDoctor } from './dto/update-doctor.type';
-import { RabbitmqEnviroments } from '../../common/constants/rabbitmq';
 import { generateDoctorNumber } from '../../common/utility/set-doctorNumber';
 import { PersonnelMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class DoctorService {
   constructor(
     @InjectRepository(Doctor)
     private readonly doctorRepository: Repository<Doctor>,
-    @Inject(RabbitmqEnviroments.UserService_Name)
+    @Inject(RabbitMQEnviroments.UserService_Name)
     private readonly userClient: ClientProxy,
   ) {}
 

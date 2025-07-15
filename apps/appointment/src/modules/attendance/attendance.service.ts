@@ -12,16 +12,16 @@ import {
   PaginateQuery,
 } from 'nestjs-paginate';
 import { UpdateAttendance } from './dto/update-attendance.type';
-import { RabbitmqEnviroments } from '../../common/constants/rabbitmq';
 import { execptionError } from '../../common/@types/eception.type';
 import { PersonnelMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class AttendanceService {
   constructor(
     @InjectRepository(Attendance)
     private readonly attendanceRespository: Repository<Attendance>,
-    @Inject(RabbitmqEnviroments.UserService_Name)
+    @Inject(RabbitMQEnviroments.UserService_Name)
     private readonly userClient: ClientProxy,
   ) {}
 

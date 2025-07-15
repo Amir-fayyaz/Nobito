@@ -6,15 +6,15 @@ import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { Doctor } from './models/doctor.model';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { DeleteResult } from 'typeorm';
-import { AppointmentRabbitmq } from '../../common/constants/rabbitmq';
 import { Exeption } from '../../common/@types/exeption-type.type';
 import { exeptionFilter } from '../../common/filters/exeption-filter';
 import { DoctorMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class DoctorService {
   constructor(
-    @Inject(AppointmentRabbitmq.AppointmentService_Name)
+    @Inject(RabbitMQEnviroments.AppointmentService_Name)
     private readonly appointmentClient: ClientProxy,
   ) {}
 

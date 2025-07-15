@@ -4,14 +4,14 @@ import { CreatePositionDto } from '../dto/create-position.dto';
 import { lastValueFrom } from 'rxjs';
 import { Position } from '../models/position.model';
 import { UpdatePositionDto } from '../dto/update-position.dto';
-import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
 import { PositionMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class PositionService {
   constructor(
-    @Inject(UserRabbitmq.UserService_Name)
+    @Inject(RabbitMQEnviroments.UserService_Name)
     private readonly userClient: ClientProxy,
   ) {}
 

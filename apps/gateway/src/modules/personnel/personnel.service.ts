@@ -1,25 +1,19 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreatePersonnelDto } from './dto/create-personnel.dto';
 import { lastValueFrom } from 'rxjs';
 import { Paginated, PaginateQuery } from 'nestjs-paginate';
 import { UpdatePersonnelDto } from './dto/update-personnel.dto';
 import { Personnel } from './models/personnel.model';
-import { UserRabbitmq } from '../../common/constants/rabbitmq';
 import { exeptionFilter } from '../../common/filters/exeption-filter';
 import { S3Service } from '../../common/services/S3.service';
 import { PersonnelMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class PersonnelService {
   constructor(
-    @Inject(UserRabbitmq.UserService_Name)
+    @Inject(RabbitMQEnviroments.UserService_Name)
     private readonly userClient: ClientProxy,
     private readonly s3service: S3Service,
   ) {}

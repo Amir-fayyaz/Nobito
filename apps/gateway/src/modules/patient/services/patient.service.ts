@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AppointmentRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { CreatePatientDto } from '../dto/create-patient.dto';
 import { lastValueFrom } from 'rxjs';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
 import { PatientMessage } from 'libs/message-patterns';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class PatientService {
   constructor(
-    @Inject(AppointmentRabbitmq.AppointmentService_Name)
+    @Inject(RabbitMQEnviroments.AppointmentService_Name)
     private readonly appointmentClient: ClientProxy,
   ) {}
 

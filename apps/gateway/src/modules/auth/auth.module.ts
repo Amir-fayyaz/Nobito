@@ -6,19 +6,19 @@ import { RoleService } from './services/role.service';
 import { RoleController } from './controllers/role.controller';
 import { PositionService } from './services/position.service';
 import { PositionController } from './controllers/position.controller';
-import { UserRabbitmq } from '../../common/constants/rabbitmq';
 import { Env } from '../../common/constants/env';
 import { CacheService } from '../../common/services/cache.service';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: UserRabbitmq.UserService_Name,
+        name: RabbitMQEnviroments.UserService_Name,
         transport: Transport.RMQ,
         options: {
           urls: [Env.RABBITMQ_URL as string],
-          queue: UserRabbitmq.User_Queue,
+          queue: RabbitMQEnviroments.User_Queue,
           queueOptions: { durable: true },
         },
       },

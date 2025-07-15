@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateRoleDto } from '../dto/create-role.dto';
 import { lastValueFrom } from 'rxjs';
@@ -11,11 +6,12 @@ import { UpdateRoleDto } from '../dto/update-role.dto';
 import { UserRabbitmq } from 'apps/gateway/src/common/constants/rabbitmq';
 import { RoleMessage } from 'libs/message-patterns';
 import { exeptionFilter } from 'apps/gateway/src/common/filters/exeption-filter';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Injectable()
 export class RoleService {
   constructor(
-    @Inject(UserRabbitmq.UserService_Name)
+    @Inject(RabbitMQEnviroments.UserService_Name)
     private readonly userClient: ClientProxy,
   ) {}
 

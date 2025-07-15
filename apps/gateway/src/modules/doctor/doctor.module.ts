@@ -2,18 +2,18 @@ import { Module } from '@nestjs/common';
 import { DoctorController } from './doctor.controller';
 import { DoctorService } from './doctor.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AppointmentRabbitmq } from '../../common/constants/rabbitmq';
 import { Env } from '../../common/constants/env';
+import { RabbitMQEnviroments } from 'libs/constants';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: AppointmentRabbitmq.AppointmentService_Name,
+        name: RabbitMQEnviroments.AppointmentService_Name,
         transport: Transport.RMQ,
         options: {
           urls: [Env.RABBITMQ_URL as string],
-          queue: AppointmentRabbitmq.Appointment_queue,
+          queue: RabbitMQEnviroments.Appointment_queue,
           queueOptions: { durable: true },
         },
       },
