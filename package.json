@@ -10,8 +10,6 @@
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "concurrently -c \"cyan.bold,yellow.bold,red.bold,blue.bold,pupple.bold\" \"npm:dev-*\" --watch",
-    "dev-user": " cross-env NEST_DEBUG=true nest start --watch user",
-    "dev-appointment": " cross-env NEST_DEBUG=true nest start --watch appointment",
     "dev-gateway": " cross-env NEST_DEBUG=true nest start --watch gateway",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/nobito/main",
