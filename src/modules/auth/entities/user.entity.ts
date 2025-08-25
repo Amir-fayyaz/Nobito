@@ -32,4 +32,7 @@ export class User extends BaseAppEntity {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @Column({ nullable: true })
+  refreshToken: string;
 }
