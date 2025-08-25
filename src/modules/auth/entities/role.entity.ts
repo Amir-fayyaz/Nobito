@@ -1,6 +1,7 @@
 import { BaseAppEntity } from '@common/entity/base.entity';
-import { Column } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
+@Entity()
 export class Role extends BaseAppEntity {
   @Column({ unique: true })
   name: string;

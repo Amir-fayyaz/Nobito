@@ -1,8 +1,9 @@
 import { BaseAppEntity } from '@common/entity/base.entity';
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Role } from './role.entity';
 import { User } from './user.entity';
 
+@Entity()
 export class UserRoles extends BaseAppEntity {
   @ManyToOne(() => Role, (role) => role.id)
   @JoinColumn({ name: 'roleId' })
