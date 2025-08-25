@@ -1,22 +1,22 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongo:
     image: mongo:latest
     container_name: nobito-mongo
     ports:
-      - "27017:27017"
+      - '27017:27017'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: amir8383
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     hostname: rabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
     environment:
       RABBITMQ_DEFAULT_USER: username
       RABBITMQ_DEFAULT_PASS: password
@@ -30,12 +30,12 @@ services:
     image: mysql:8
     container_name: reservation-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: yourpassword
-      MYSQL_DATABASE: reservation-system
-      MYSQL_USER: amir
+      MYSQL_ROOT_PASSWORD: amir8383
+      MYSQL_DATABASE: nobito
+      MYSQL_USER: nobito
       MYSQL_PASSWORD: amir8383
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
     container_name: nobito-redis
     restart: always
     ports:
-      - "6379:6379"
+      - '6379:6379'
 
     networks:
       - reservation-system
