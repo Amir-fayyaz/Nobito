@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongo:
     image: mongo:latest
@@ -24,23 +22,7 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     restart: unless-stopped
     networks:
-      - reservation-system
-
-  mysql:
-    image: mysql:8
-    container_name: reservation-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: amir8383
-      MYSQL_DATABASE: nobito
-      MYSQL_USER: nobito
-      MYSQL_PASSWORD: amir8383
-    ports:
-      - '3306:3306'
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
-    networks:
-      - reservation-system
+      - nobito-system
 
   redis:
     image: redis:7
@@ -50,12 +32,12 @@ services:
       - '6379:6379'
 
     networks:
-      - reservation-system
+      - nobito-system
 
 volumes:
   rabbitmq_data:
   mysql_data:
 
 networks:
-  reservation-system:
+  nobito-system:
     driver: bridge
