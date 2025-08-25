@@ -1,4 +1,5 @@
 import { AppCacheModule } from '@common/modules/cache.module';
+import { RedisModule } from '@common/modules/redis.module';
 import { TypeOrmConfig } from '@config/typeorm.config';
 import { AuthModule } from '@module/auth/auth.module';
 import { Module } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { AppService } from './app.service';
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     AppCacheModule,
+    RedisModule.forRootAsync(),
   ],
   controllers: [AppController],
   providers: [AppService],
