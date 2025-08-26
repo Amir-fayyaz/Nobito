@@ -4,7 +4,7 @@ import { Permission } from './permission.entity';
 
 @Entity()
 export class PermissionCategory extends BaseAppEntity {
-  @Column()
+  @Column({ unique: true })
   title: string;
 
   @OneToMany(() => Permission, (permission) => permission.permissionCategory)
