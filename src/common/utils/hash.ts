@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 
-export function Hash(data: any): string {
-  return bcrypt.hashSync(data, 10);
+export async function Hash(data: any): Promise<string> {
+  return await bcrypt.hash(data, 10);
 }
 
 export function Compare(data: any, hashedData: string): boolean {
