@@ -3,9 +3,9 @@ import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class Permission extends BaseAppEntity {
-  @Column()
+  @Column({ unique: true })
   title: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   description: string;
 }
