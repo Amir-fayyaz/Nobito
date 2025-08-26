@@ -1,6 +1,7 @@
 import { dataSource } from '@config/data-source.config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 import { config } from 'dotenv';
 import { Swagger } from './configs/swagger-setup.config';
 import { AppModule } from './modules/app/app.module';
@@ -11,6 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
+  app.use(cookieParser());
   Swagger(app);
 
   app.useGlobalPipes(
