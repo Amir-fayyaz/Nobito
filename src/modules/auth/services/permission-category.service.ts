@@ -16,4 +16,8 @@ export class PermissionCateogryService {
 
     return await this.categoryRepository.save(category);
   }
+
+  async findAll(): Promise<PermissionCategory[]> {
+    return await this.categoryRepository.find();
+  }
 }

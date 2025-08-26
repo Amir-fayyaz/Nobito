@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreatePermissionCategoryDto } from '../dto/create-permission-category.dto';
 import { PermissionCateogryService } from '../services/permission-category.service';
 
@@ -9,5 +9,10 @@ export class PermissionCategoryController {
   @Post()
   async create(@Body() dto: CreatePermissionCategoryDto) {
     return await this.service.create(dto);
+  }
+
+  @Get()
+  async findAll() {
+    return await this.service.findAll();
   }
 }
