@@ -33,4 +33,8 @@ export class PermissionCateogryService {
 
     return { success: true };
   }
+
+  async remove(id: string) {
+    return await this.categoryRepository.delete({ id });
+  }
 }
