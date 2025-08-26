@@ -5,8 +5,10 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateRoleDto } from '../dto/create-role.dto';
+import { UpdateRoleDto } from '../dto/update-role.dto';
 import { RoleService } from '../services/role.service';
 
 @Controller('roles')
@@ -26,5 +28,13 @@ export class RoleController {
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.roleService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateRoleDto,
+  ) {
+    return await this.roleService.update(id, dto);
   }
 }
