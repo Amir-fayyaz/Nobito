@@ -1,5 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  JwtAccess_Name,
+  JwtRefresh_Name,
+  MaxAge_AccessToken,
+  MaxAge_RefreshToken,
+} from '@common/constants/constant';
+import { setCookies } from '@common/utils/cookie';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
+import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { AuthService } from '../services/auth.service';
 
 @Controller('auth')
@@ -8,5 +17,41 @@ export class AuthController {
   @Post('register-by-phone')
   async registerByPhone(@Body() dto: RegisterByPhoneDto) {
     return await this.authService.registerByPhone(dto);
+  }
+
+  @Post('verify-by-phone')
+  async verifyByPhone(
+    @Res() response: Response,
+    @Body() dto: VerifyByPhoneDto,
+  ) {
+    const { accesstoken, refreshToken } =
+      await this.authService.verifyByPhone(dto);
+
+    console.log(accesstoken, refreshToken);
+
+    setCookies(response, [
+      {
+        name: JwtAccess_Name,
+        value: accesstoken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_AccessToken,
+        },
+      },
+      {
+        name: JwtRefresh_Name,
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_RefreshToken,
+        },
+      },
+    ]);
+
+    response.json({ success: true });
   }
 }
