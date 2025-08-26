@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePermissionCategoryDto } from '../dto/create-permission-category.dto';
+import { UpdatePermissionCategoryDto } from '../dto/update-permission-category.dto';
 import { PermissionCategory } from '../entities/permission-category.entity';
 
 @Injectable()
@@ -23,5 +24,13 @@ export class PermissionCateogryService {
 
   async findOne(id: string): Promise<PermissionCategory | null> {
     return await this.categoryRepository.findOne({ where: { id } });
+  }
+
+  async update(id: string, dto: UpdatePermissionCategoryDto) {
+    const { affected } = await this.categoryRepository.update(id, dto);
+
+    if (!affected) throw new NotFoundException('permission-category not found');
+
+    return { success: true };
   }
 }
