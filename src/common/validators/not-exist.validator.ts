@@ -27,7 +27,7 @@ export class NotExistenceConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments): string {
-    return `${args.constraints[0].name} with ${args.property}, ${args.value} already exists`;
+    return `${args.constraints[0].name} with this ${args.property} already exists`;
   }
 }
 
