@@ -20,4 +20,8 @@ export class PermissionCateogryService {
   async findAll(): Promise<PermissionCategory[]> {
     return await this.categoryRepository.find();
   }
+
+  async findOne(id: string): Promise<PermissionCategory | null> {
+    return await this.categoryRepository.findOne({ where: { id } });
+  }
 }
