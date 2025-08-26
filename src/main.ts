@@ -1,3 +1,4 @@
+import { dataSource } from '@config/data-source.config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { config } from 'dotenv';
@@ -19,6 +20,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  await dataSource.initialize();
 
   await app.listen(Number(process.env.APP_PORT), () => {
     Logger.log(

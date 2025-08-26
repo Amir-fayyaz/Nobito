@@ -1,0 +1,17 @@
+import { config } from 'dotenv';
+import { DataSource } from 'typeorm';
+
+config();
+
+export const dataSource = new DataSource({
+  host: process.env.MYSQL_HOST,
+  username: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_ROOT_PASSWORD,
+  port: Number(process.env.MYSQL_PORT),
+  type: 'mysql',
+  database: process.env.MYSQL_DATABASE,
+  entities: ['dist/**/**/**/*.entity{.ts,.js}', 'dist/**/**/*.entity{.ts,.js}'],
+  dropSchema: false,
+  logging: false,
+  logger: 'file',
+});
