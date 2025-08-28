@@ -1,6 +1,8 @@
+import { Exists } from '@common/validators/exist.validator';
 import { NotExists } from '@common/validators/not-exist.validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
+import { PermissionCategory } from '../entities/permission-category.entity';
 import { Permission } from '../entities/permission.entity';
 
 export class CreatePermissionDto {
@@ -13,4 +15,8 @@ export class CreatePermissionDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @ApiProperty({ example: 1 })
+  @Exists(PermissionCategory)
+  categoryId: string;
 }
