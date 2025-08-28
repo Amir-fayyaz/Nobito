@@ -16,4 +16,10 @@ export class PermissionService {
 
     return await this.permissionRepository.save(permission);
   }
+
+  async findAll(): Promise<Permission[]> {
+    return await this.permissionRepository.find({
+      relations: { permissionCategory: true },
+    });
+  }
 }
