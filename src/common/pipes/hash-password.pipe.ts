@@ -3,8 +3,8 @@ import { Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export class HashPasswordPipe implements PipeTransform {
-  transform(value: any) {
-    if (value.password) value.password = Hash(value.password);
+  async transform(value: any) {
+    if (value.password) value.password = await Hash(value.password);
 
     return value;
   }
