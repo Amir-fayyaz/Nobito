@@ -7,6 +7,7 @@ import {
 import { setCookies } from '@common/utils/cookie';
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { AuthService } from '../services/auth.service';
@@ -53,5 +54,10 @@ export class AuthController {
     ]);
 
     response.json({ success: true });
+  }
+
+  @Post('register-by-email')
+  async registerByEmail(@Body() dto: RegisterByEmailDto) {
+    return await this.authService.registerByEmail(dto);
   }
 }
