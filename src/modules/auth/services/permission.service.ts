@@ -22,4 +22,11 @@ export class PermissionService {
       relations: { permissionCategory: true },
     });
   }
+
+  async findOne(id: string): Promise<Permission | null> {
+    return await this.permissionRepository.findOne({
+      where: { id },
+      relations: { permissionCategory: true },
+    });
+  }
 }

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { CreatePermissionDto } from '../dto/create-permission.dto';
 import { PermissionService } from '../services/permission.service';
 
@@ -14,5 +21,10 @@ export class PermissionController {
   @Get()
   async findAll() {
     return await this.permissionService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.permissionService.findOne(id);
   }
 }
