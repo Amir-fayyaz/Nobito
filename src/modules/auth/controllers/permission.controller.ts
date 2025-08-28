@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -36,5 +37,10 @@ export class PermissionController {
     @Body() dto: UpdatePermissionDto,
   ) {
     return await this.permissionService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.permissionService.remove(id);
   }
 }

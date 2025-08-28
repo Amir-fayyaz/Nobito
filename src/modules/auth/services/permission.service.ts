@@ -38,4 +38,12 @@ export class PermissionService {
 
     return { success: true };
   }
+
+  async remove(id: string) {
+    const { affected } = await this.permissionRepository.delete({ id });
+
+    if (!affected) throw new NotFoundException();
+
+    return { success: true };
+  }
 }
