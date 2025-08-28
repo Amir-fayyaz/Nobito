@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { User } from '../entities/user.entity';
@@ -71,5 +72,17 @@ export class AuthService {
       sub: user.id,
       role: 'user',
     });
+  }
+
+  async registerByEmail({ password, username }: RegisterByEmailDto) {
+    const isOtpSent = await this.cacheService.get(`username:${username}`);
+
+    if (isOtpSent)
+      throw new HttpException('otp sent !', HttpStatus.TOO_MANY_REQUESTS);
+
+    const newUser = this.userRepository.create({ username, password });
+    await this.userRepository.save(newUser);
+
+    return { success: true };
   }
 }
