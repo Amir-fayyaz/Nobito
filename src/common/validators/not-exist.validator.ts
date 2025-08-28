@@ -7,6 +7,8 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { validate as isUUID } from 'uuid';
+
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class NotExistenceConstraint implements ValidatorConstraintInterface {
@@ -15,9 +17,11 @@ export class NotExistenceConstraint implements ValidatorConstraintInterface {
     const queryRunner = dataSource.createQueryRunner();
     await queryRunner.connect();
     try {
+      const field = isUUID(value) ? 'id' : args.property;
+
       const exists: boolean = await queryRunner.manager
         .createQueryBuilder(entityClass, entityClass.name)
-        .where(`${entityClass.name}.${args.property} = :value`, { value })
+        .where(`${entityClass.name}.${field} = :value`, { value })
         .withDeleted()
         .getExists();
       return !exists;
