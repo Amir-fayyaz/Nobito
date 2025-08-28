@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,6 +16,7 @@ import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
 import { VerifyByEmailDto } from '../dto/verify-by-email.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
+import { UserRoles } from '../entities/user-roles.entity';
 import { User } from '../entities/user.entity';
 import { JwtAppService } from './jwt.service';
 import { OtpService } from './otp.service';
@@ -27,6 +29,8 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly otpService: OtpService,
     private readonly jwtAppService: JwtAppService,
+    @InjectRepository(UserRoles)
+    private readonly userRoleRepository: Repository<UserRoles>,
   ) {}
 
   /**
@@ -136,6 +140,30 @@ export class AuthService {
 
     return await this.jwtAppService.generateTokens({
       sub: user.id,
+    });
+  }
+
+  async authenticateUser(accessToken: string): Promise<User> {
+    if (!accessToken) throw new UnauthorizedException();
+
+    const payload = await this.jwtAppService.verifyAccessToken(accessToken);
+
+    const user = await this.userRepository.findOne({
+      where: { id: payload.sub },
+    });
+
+    if (!user) throw new UnauthorizedException('unknown user');
+
+    if (!user.isEmailVerified && !user.isPhoneVerified)
+      throw new UnauthorizedException('Please verify Your acount');
+
+    return user;
+  }
+
+  async loadUserRoles(userId: string) {
+    return await this.userRoleRepository.findOne({
+      where: { userId },
+      relations: { role: true },
     });
   }
 }
