@@ -11,6 +11,7 @@ import { Response } from 'express';
 import { LoginByEmailDto } from '../dto/login-by-email.dto';
 import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
+import { VerifyByEmailDto } from '../dto/verify-by-email.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { AuthService } from '../services/auth.service';
 
@@ -59,6 +60,40 @@ export class AuthController {
   @Post('register-by-email')
   async registerByEmail(@Body(HashPasswordPipe) dto: RegisterByEmailDto) {
     return await this.authService.registerByEmail(dto);
+  }
+
+  @Post('verify-by-email')
+  async verifyByEmail(
+    @Body() dto: VerifyByEmailDto,
+    @Res() response: Response,
+  ) {
+    const { accesstoken, refreshToken } =
+      await this.authService.verifyByEmail(dto);
+
+    setCookies(response, [
+      {
+        name: JwtAccess_Name,
+        value: accesstoken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_AccessToken,
+        },
+      },
+      {
+        name: JwtRefresh_Name,
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_RefreshToken,
+        },
+      },
+    ]);
+
+    response.json({ success: true });
   }
 
   @Post('login-by-email')

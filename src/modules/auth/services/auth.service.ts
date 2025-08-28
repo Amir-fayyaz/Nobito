@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { LoginByEmailDto } from '../dto/login-by-email.dto';
 import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
+import { VerifyByEmailDto } from '../dto/verify-by-email.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { User } from '../entities/user.entity';
 import { JwtAppService } from './jwt.service';
@@ -79,23 +80,55 @@ export class AuthService {
   }
 
   async registerByEmail({ password, username }: RegisterByEmailDto) {
-    const isOtpSent = await this.cacheService.get(`username:${username}`);
+    const user = await this.userRepository.findOne({ where: { username } });
+
+    const isOtpSent = await this.cacheService.get(`email:${username}`);
 
     if (isOtpSent)
       throw new HttpException('otp sent !', HttpStatus.TOO_MANY_REQUESTS);
 
-    const newUser = this.userRepository.create({ username, password });
-    await this.userRepository.save(newUser);
+    if (!user) {
+      const newUser = this.userRepository.create({ username, password });
+      await this.userRepository.save(newUser);
 
-    return await this.otpService.sendOtp(OtpType.EMAIL, username);
+      return await this.otpService.sendOtp(OtpType.EMAIL, username);
+    } else {
+      if (user.isPhoneVerified)
+        throw new BadRequestException('Login into your acount');
+
+      return await this.otpService.sendOtp(OtpType.EMAIL, username);
+    }
+  }
+
+  async verifyByEmail(dto: VerifyByEmailDto) {
+    const user = await this.userRepository.findOne({
+      where: { username: dto.username },
+    });
+
+    if (!user) throw new NotFoundException('user not found');
+    if (user && user.isEmailVerified)
+      throw new BadRequestException('Your Acount was verified');
+
+    const otp = await this.cacheService.get(`email:${dto.username}`);
+
+    if (!otp) throw new NotFoundException('You didnt get otp yet !');
+
+    if (otp && otp !== dto.otp) throw new BadRequestException('Wrong otp !');
+
+    user.isEmailVerified = true;
+    await this.userRepository.save(user);
+
+    await this.cacheService.del(`email:${dto.username}`);
+
+    return await this.jwtAppService.generateTokens({ sub: user.id });
   }
 
   async login({ password, username }: LoginByEmailDto) {
     const user = await this.userRepository.findOne({ where: { username } });
 
     if (!user) throw new NotFoundException();
-
-    console.log(password, user.password);
+    if (!user.isEmailVerified)
+      throw new BadRequestException('Your email didnt verified');
 
     const isPasswordCorrect = Compare(password, user.password);
 
