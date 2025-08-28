@@ -4,9 +4,11 @@ import {
   MaxAge_AccessToken,
   MaxAge_RefreshToken,
 } from '@common/constants/constant';
+import { HashPasswordPipe } from '@common/pipes/hash-password.pipe';
 import { setCookies } from '@common/utils/cookie';
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { LoginByEmailDto } from '../dto/login-by-email.dto';
 import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
@@ -27,8 +29,6 @@ export class AuthController {
   ) {
     const { accesstoken, refreshToken } =
       await this.authService.verifyByPhone(dto);
-
-    console.log(accesstoken, refreshToken);
 
     setCookies(response, [
       {
@@ -57,7 +57,37 @@ export class AuthController {
   }
 
   @Post('register-by-email')
-  async registerByEmail(@Body() dto: RegisterByEmailDto) {
+  async registerByEmail(@Body(HashPasswordPipe) dto: RegisterByEmailDto) {
     return await this.authService.registerByEmail(dto);
+  }
+
+  @Post('login-by-email')
+  async login(@Body() dto: LoginByEmailDto, @Res() response: Response) {
+    const { accesstoken, refreshToken } = await this.authService.login(dto);
+
+    setCookies(response, [
+      {
+        name: JwtAccess_Name,
+        value: accesstoken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_AccessToken,
+        },
+      },
+      {
+        name: JwtRefresh_Name,
+        value: refreshToken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_RefreshToken,
+        },
+      },
+    ]);
+
+    response.json({ success: true });
   }
 }
