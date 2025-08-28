@@ -1,4 +1,6 @@
+import { OtpType } from '@common/@types/otp-types';
 import { CacheService } from '@common/services/cache.service';
+import { Compare } from '@common/utils/hash';
 import {
   BadRequestException,
   HttpException,
@@ -8,13 +10,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LoginByEmailDto } from '../dto/login-by-email.dto';
 import { RegisterByEmailDto } from '../dto/register-by-email.dto';
 import { RegisterByPhoneDto } from '../dto/register-by-phone.dto';
 import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { User } from '../entities/user.entity';
 import { JwtAppService } from './jwt.service';
 import { OtpService } from './otp.service';
-import { UserService } from './user.service';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +26,6 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly otpService: OtpService,
     private readonly jwtAppService: JwtAppService,
-    private readonly userService: UserService,
   ) {}
 
   /**
@@ -48,9 +49,9 @@ export class AuthService {
 
       await this.userRepository.save(newUser);
 
-      return await this.otpService.sendOtp(phone);
+      return await this.otpService.sendOtp(OtpType.PHONE, phone);
     } else {
-      return await this.otpService.sendOtp(phone);
+      return await this.otpService.sendOtp(OtpType.PHONE, phone);
     }
   }
 
@@ -68,9 +69,12 @@ export class AuthService {
 
     await this.cacheService.del(`phone:${dto.phone}`);
 
+    if (!user.isPhoneVerified) user.isPhoneVerified = true;
+
+    await this.userRepository.save(user);
+
     return await this.jwtAppService.generateTokens({
       sub: user.id,
-      role: 'user',
     });
   }
 
@@ -83,6 +87,22 @@ export class AuthService {
     const newUser = this.userRepository.create({ username, password });
     await this.userRepository.save(newUser);
 
-    return { success: true };
+    return await this.otpService.sendOtp(OtpType.EMAIL, username);
+  }
+
+  async login({ password, username }: LoginByEmailDto) {
+    const user = await this.userRepository.findOne({ where: { username } });
+
+    if (!user) throw new NotFoundException();
+
+    console.log(password, user.password);
+
+    const isPasswordCorrect = Compare(password, user.password);
+
+    if (!isPasswordCorrect) throw new BadRequestException('Wrong password !');
+
+    return await this.jwtAppService.generateTokens({
+      sub: user.id,
+    });
   }
 }
