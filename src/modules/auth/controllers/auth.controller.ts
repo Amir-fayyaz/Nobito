@@ -4,6 +4,7 @@ import {
   MaxAge_AccessToken,
   MaxAge_RefreshToken,
 } from '@common/constants/constant';
+import { Public } from '@common/decorators/is-public.decorator';
 import { HashPasswordPipe } from '@common/pipes/hash-password.pipe';
 import { setCookies } from '@common/utils/cookie';
 import { Body, Controller, Post, Res } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { VerifyByPhoneDto } from '../dto/verify-by-phone.dto';
 import { AuthService } from '../services/auth.service';
 
 @Controller('auth')
+@Public()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('register-by-phone')
