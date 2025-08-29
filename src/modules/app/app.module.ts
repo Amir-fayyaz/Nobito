@@ -1,15 +1,11 @@
-import { AuthMiddleware } from '@common/middleware/auth.middleware';
 import { AppCacheModule } from '@common/modules/cache.module';
 import { RedisModule } from '@common/modules/redis.module';
 import { TypeOrmConfig } from '@config/typeorm.config';
 import { AuthModule } from '@module/auth/auth.module';
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { AuthorizationGuard } from '@module/auth/guards/auth.guard';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -23,16 +19,12 @@ import { AppService } from './app.service';
     RedisModule.forRootAsync(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizationGuard,
+    },
+  ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude({
-        path: 'auth/*splat',
-        method: RequestMethod.ALL,
-      })
-      .forRoutes('*splat');
-  }
-}
+export class AppModule {}
