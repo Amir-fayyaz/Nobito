@@ -161,7 +161,7 @@ export class AuthService {
   }
 
   async loadUserRoles(userId: string) {
-    return await this.userRoleRepository.findOne({
+    return await this.userRoleRepository.find({
       where: { userId },
       relations: { role: true },
     });
