@@ -16,4 +16,8 @@ export class PositionService {
 
     return await this.positionRepository.save(newPosition);
   }
+
+  async findAll(): Promise<Position[]> {
+    return await this.positionRepository.find();
+  }
 }
