@@ -1,4 +1,5 @@
 import { Public } from '@common/decorators/is-public.decorator';
+import { AtLeastOnePipe } from '@common/pipes/at-least-one.pipe';
 import {
   Body,
   Controller,
@@ -6,8 +7,10 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreatePositionDto } from './dto/create-position.dto';
+import { UpdatePositionDto } from './dto/update-position.dto';
 import { PositionService } from './position.service';
 
 @Controller('positions')
@@ -28,5 +31,13 @@ export class PositionController {
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.service.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new AtLeastOnePipe(['name', 'description'])) dto: UpdatePositionDto,
+  ) {
+    return await this.service.update(id, dto);
   }
 }
