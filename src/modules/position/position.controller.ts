@@ -1,5 +1,12 @@
 import { Public } from '@common/decorators/is-public.decorator';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { PositionService } from './position.service';
 
@@ -16,5 +23,10 @@ export class PositionController {
   @Get()
   async findAll() {
     return await this.service.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.service.findOne(id);
   }
 }

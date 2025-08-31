@@ -20,4 +20,8 @@ export class PositionService {
   async findAll(): Promise<Position[]> {
     return await this.positionRepository.find();
   }
+
+  async findOne(id: string): Promise<Position | null> {
+    return await this.positionRepository.findOne({ where: { id } });
+  }
 }
