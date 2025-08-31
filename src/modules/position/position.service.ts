@@ -33,4 +33,8 @@ export class PositionService {
 
     return { success: true };
   }
+
+  async remove(id: string) {
+    return await this.positionRepository.delete({ id });
+  }
 }

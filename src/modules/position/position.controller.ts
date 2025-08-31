@@ -3,6 +3,7 @@ import { AtLeastOnePipe } from '@common/pipes/at-least-one.pipe';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -39,5 +40,10 @@ export class PositionController {
     @Body(new AtLeastOnePipe(['name', 'description'])) dto: UpdatePositionDto,
   ) {
     return await this.service.update(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.service.remove(id);
   }
 }
