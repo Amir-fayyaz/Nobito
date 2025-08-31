@@ -4,6 +4,7 @@ import {
   MaxAge_AccessToken,
   MaxAge_RefreshToken,
 } from '@common/constants/constant';
+import { Cookie } from '@common/decorators/get-cookie.decorator';
 import { Public } from '@common/decorators/is-public.decorator';
 import { HashPasswordPipe } from '@common/pipes/hash-password.pipe';
 import { setCookies } from '@common/utils/cookie';
@@ -121,6 +122,29 @@ export class AuthController {
           secure: true,
           sameSite: 'lax',
           maxAge: MaxAge_RefreshToken,
+        },
+      },
+    ]);
+
+    response.json({ success: true });
+  }
+
+  @Post('refresh-token')
+  async refreshToken(
+    @Res() response: Response,
+    @Cookie(JwtRefresh_Name) refreshToken: string,
+  ) {
+    const accessToken = await this.authService.refreshToken(refreshToken);
+
+    setCookies(response, [
+      {
+        name: JwtAccess_Name,
+        value: accessToken,
+        options: {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          maxAge: MaxAge_AccessToken,
         },
       },
     ]);

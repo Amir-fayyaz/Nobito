@@ -76,11 +76,16 @@ export class AuthService {
 
     if (!user.isPhoneVerified) user.isPhoneVerified = true;
 
+    const { accesstoken, refreshToken } =
+      await this.jwtAppService.generateTokens({
+        sub: user.id,
+      });
+
+    user.refreshToken = refreshToken;
+
     await this.userRepository.save(user);
 
-    return await this.jwtAppService.generateTokens({
-      sub: user.id,
-    });
+    return { accesstoken, refreshToken };
   }
 
   async registerByEmail({ password, username }: RegisterByEmailDto) {
@@ -119,12 +124,18 @@ export class AuthService {
 
     if (otp && otp !== dto.otp) throw new BadRequestException('Wrong otp !');
 
-    user.isEmailVerified = true;
+    if (!user.isEmailVerified) user.isEmailVerified = true;
+
+    const { accesstoken, refreshToken } =
+      await this.jwtAppService.generateTokens({
+        sub: user.id,
+      });
+
+    user.refreshToken = refreshToken;
+
     await this.userRepository.save(user);
 
-    await this.cacheService.del(`email:${dto.username}`);
-
-    return await this.jwtAppService.generateTokens({ sub: user.id });
+    return { accesstoken, refreshToken };
   }
 
   async login({ password, username }: LoginByEmailDto) {
@@ -164,6 +175,16 @@ export class AuthService {
     return await this.userRoleRepository.find({
       where: { userId },
       relations: { role: true },
+    });
+  }
+
+  async refreshToken(refreshToken: string) {
+    const user = await this.userRepository.findOne({ where: { refreshToken } });
+
+    if (!user) throw new UnauthorizedException('Invalid refersh-token');
+
+    return await this.jwtAppService.generateAccessToken({
+      sub: user.id,
     });
   }
 }
