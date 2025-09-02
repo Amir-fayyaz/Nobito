@@ -1,6 +1,7 @@
 import { AppCacheModule } from '@common/modules/cache.module';
 import { RedisModule } from '@common/modules/redis.module';
 import { TypeOrmConfig } from '@config/typeorm.config';
+import { AddressModule } from '@module/address/address.module';
 import { AuthModule } from '@module/auth/auth.module';
 import { AuthorizationGuard } from '@module/auth/guards/auth.guard';
 import { PositionModule } from '@module/position/position.module';
@@ -19,6 +20,7 @@ import { AppService } from './app.service';
     AppCacheModule,
     RedisModule.forRootAsync(),
     PositionModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [
