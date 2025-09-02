@@ -9,9 +9,9 @@ export class Address extends BaseAppEntity {
   @Column()
   city: string;
 
-  @Column({ nullable: true })
-  latitude: string;
+  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 8 })
+  latitude: number;
 
-  @Column({ nullable: true })
-  longitude: string;
+  @Column({ nullable: true, type: 'decimal', precision: 11, scale: 8 })
+  longitude: number;
 }
