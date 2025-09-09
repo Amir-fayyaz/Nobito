@@ -6,3 +6,9 @@ export const JwtRefresh_Name = 'X-NOBITO-REFRESH-TOKEN';
 
 export const MaxAge_RefreshToken = 30 * 24 * 60 * 60 * 1000;
 export const MaxAge_AccessToken = 30 * 60 * 1000; //for development
+
+export const PdfAllowedMimeTypes = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
