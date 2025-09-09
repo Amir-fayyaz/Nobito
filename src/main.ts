@@ -25,10 +25,14 @@ async function bootstrap() {
 
   await dataSource.initialize();
 
-  await app.listen(Number(process.env.APP_PORT), () => {
+  await app.listen(Number(process.env.APP_PORT), async () => {
     Logger.log(
       `Gateway service is runnung on port ${process.env.APP_PORT}`,
-      'NestLogger',
+      'NobitoLogger',
+    );
+    Logger.log(
+      `nobito-docs are available on ${await app.getUrl()}/docs`,
+      'NobitoLogger',
     );
   });
 }
