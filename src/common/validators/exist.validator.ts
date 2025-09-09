@@ -1,50 +1,3 @@
-// import { dataSource } from '@config/data-source.config';
-// import { Injectable } from '@nestjs/common';
-// import {
-//   registerDecorator,
-//   ValidationArguments,
-//   ValidationOptions,
-//   ValidatorConstraint,
-//   ValidatorConstraintInterface,
-// } from 'class-validator';
-// @ValidatorConstraint({ async: true })
-// @Injectable()
-// export class ExistenceConstraint implements ValidatorConstraintInterface {
-//   async validate(value: string, args: ValidationArguments): Promise<boolean> {
-//     const entityClass = args.constraints[0];
-//     const queryRunner = dataSource.createQueryRunner();
-//     await queryRunner.connect();
-//     try {
-//       return await queryRunner.manager
-//         .createQueryBuilder(entityClass, entityClass.name)
-//         .where(`${entityClass.name}.${args.property} = :value`, { value })
-//         .withDeleted()
-//         .getExists();
-//     } finally {
-//       queryRunner.release();
-//     }
-//   }
-
-//   defaultMessage(args: ValidationArguments): string {
-//     return ` ${args.property} not found`;
-//   }
-// }
-
-// export function Exists(
-//   entityClass: any,
-//   validationOptions?: ValidationOptions,
-// ) {
-//   return function (object: object, propertyName: string) {
-//     registerDecorator({
-//       target: object.constructor,
-//       propertyName: propertyName,
-//       options: validationOptions,
-//       constraints: [entityClass],
-//       validator: ExistenceConstraint,
-//     });
-//   };
-// }
-
 import { dataSource } from '@config/data-source.config';
 import { Injectable } from '@nestjs/common';
 import {
@@ -61,30 +14,33 @@ import { validate as isUUID } from 'uuid';
 export class ExistenceConstraint implements ValidatorConstraintInterface {
   async validate(value: string, args: ValidationArguments): Promise<boolean> {
     const entityClass = args.constraints[0];
+    const field = args.constraints[1];
 
     const queryRunner = dataSource.createQueryRunner();
     await queryRunner.connect();
-
     try {
-      const field = isUUID(value) ? 'id' : args.property;
+      const fieldName = field ?? (isUUID(value) ? 'id' : args.property);
 
-      return await queryRunner.manager
+      const exists: boolean = await queryRunner.manager
         .createQueryBuilder(entityClass, entityClass.name)
-        .where(`${entityClass.name}.${field} = :value`, { value })
+        .where(`${entityClass.name}.${fieldName} = :value`, { value })
         .withDeleted()
         .getExists();
+
+      return exists;
     } finally {
-      await queryRunner.release();
+      queryRunner.release();
     }
   }
 
   defaultMessage(args: ValidationArguments): string {
-    return `${args.property} not found`;
+    return `${args.constraints[0].name} with this ${args.property} already exists`;
   }
 }
 
 export function Exists(
   entityClass: any,
+  field?: string,
   validationOptions?: ValidationOptions,
 ) {
   return function (object: object, propertyName: string) {
@@ -92,7 +48,7 @@ export function Exists(
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      constraints: [entityClass],
+      constraints: [entityClass, field],
       validator: ExistenceConstraint,
     });
   };
