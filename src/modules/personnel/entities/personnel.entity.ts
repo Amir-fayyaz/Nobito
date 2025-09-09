@@ -19,15 +19,15 @@ export class Personnel extends BaseAppEntity {
   position: Position;
 
   @Column()
-  positionId: number;
+  positionId: string;
 
   @OneToOne(() => User, (user) => user.id)
   @JoinColumn()
   user: User;
 
   @Column()
-  userId: number;
+  userId: string;
 
-  @Column({ unique: true })
-  personnelCode: number;
+  @Column({ unique: true, nullable: true })
+  personnelCode: string;
 }
