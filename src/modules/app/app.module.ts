@@ -4,6 +4,7 @@ import { TypeOrmConfig } from '@config/typeorm.config';
 import { AddressModule } from '@module/address/address.module';
 import { AuthModule } from '@module/auth/auth.module';
 import { AuthorizationGuard } from '@module/auth/guards/auth.guard';
+import { PersonnelModule } from '@module/personnel/personnel.module';
 import { PositionModule } from '@module/position/position.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -21,6 +22,7 @@ import { AppService } from './app.service';
     RedisModule.forRootAsync(),
     PositionModule,
     AddressModule,
+    PersonnelModule,
   ],
   controllers: [AppController],
   providers: [
