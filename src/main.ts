@@ -1,10 +1,8 @@
-import { dataSource } from '@config/data-source.config';
+import { AppModule } from '@module/app/app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { config } from 'dotenv';
-import { Swagger } from './configs/swagger-setup.config';
-import { AppModule } from './modules/app/app.module';
 
 config();
 
@@ -13,7 +11,6 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.use(cookieParser());
-  Swagger(app);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,17 +20,12 @@ async function bootstrap() {
     }),
   );
 
-  await dataSource.initialize();
-
   await app.listen(Number(process.env.APP_PORT), async () => {
     Logger.log(
       `Gateway service is runnung on port ${process.env.APP_PORT}`,
-      'NobitoLogger',
+      'Logger',
     );
-    Logger.log(
-      `nobito-docs are available on ${await app.getUrl()}/docs`,
-      'NobitoLogger',
-    );
+    Logger.log(`docs are available on ${await app.getUrl()}/docs`, 'Logger');
   });
 }
 bootstrap();
