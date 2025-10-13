@@ -1,3 +1,4 @@
+import { Swagger } from '@config/swagger.config';
 import { AppModule } from '@module/app/app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -19,6 +20,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  Swagger(app);
 
   await app.listen(Number(process.env.APP_PORT), async () => {
     Logger.log(
