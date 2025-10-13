@@ -1,16 +1,32 @@
 services:
+  mysql:
+    image: mysql:8
+    ports:
+      - '3306:3306'
+    container_name: aliBaba-mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=aliBabaRootPassword
+      - MYSQL_DATABASE=ali-baba
+      - MYSQL_USER=aliBaba
+      - MYSQL_PASSWORD=aliBabaPassword
+
   mongo:
     image: mongo:latest
-    container_name: nobito-mongo
+    container_name: aliBaba-mongo
     ports:
       - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    networks:
+      - ali-baba
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: aliBaba-rabbitmq
     hostname: rabbitmq
     ports:
       - '5672:5672'
@@ -22,22 +38,21 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     restart: unless-stopped
     networks:
-      - nobito-system
+      - ali-baba
 
   redis:
     image: redis:7
-    container_name: nobito-redis
+    container_name: aliBaba-redis
     restart: always
     ports:
       - '6379:6379'
-
     networks:
-      - nobito-system
+      - ali-baba
 
 volumes:
   rabbitmq_data:
   mysql_data:
 
 networks:
-  nobito-system:
+  ali-baba:
     driver: bridge
