@@ -1,3 +1,4 @@
+import dataSource from '@config/data-source';
 import { Swagger } from '@config/swagger.config';
 import { AppModule } from '@module/app/app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -22,6 +23,8 @@ async function bootstrap() {
   );
 
   Swagger(app);
+
+  await dataSource.initialize();
 
   await app.listen(Number(process.env.APP_PORT), async () => {
     Logger.log(
