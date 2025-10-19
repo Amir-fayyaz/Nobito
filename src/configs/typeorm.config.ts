@@ -10,6 +10,10 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
       username: process.env.MYSQL_ROOT_USERNAME,
       database: process.env.MYSQL_DATABASE,
       synchronize: process.env.NODE_ENV === 'development',
+      entities: [
+        'dist/**/**/**/*.entity{.ts,.js}',
+        'dist/**/**/*.entity{.ts,.js}',
+      ],
     };
   }
 }
