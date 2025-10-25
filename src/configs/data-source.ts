@@ -11,7 +11,10 @@ export default new DataSource({
   type: 'mysql',
   database: process.env.MYSQL_DATABASE,
   entities: ['dist/**/**/**/*.entity{.ts,.js}', 'dist/**/**/*.entity{.ts,.js}'],
+  synchronize: false,
   dropSchema: false,
   logging: false,
   logger: 'file',
+  migrations: ['dist/src/migrations/*{.ts , .js}'],
+  migrationsTableName: 'migration-aliBaba-db',
 });
