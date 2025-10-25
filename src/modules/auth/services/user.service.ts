@@ -16,4 +16,8 @@ export class UserService {
 
     return await this.repository.save(newUser);
   }
+
+  async findOne(id: string): Promise<User | null> {
+    return await this.repository.findOne({ where: { id } });
+  }
 }
