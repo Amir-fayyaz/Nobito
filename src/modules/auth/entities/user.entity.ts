@@ -22,4 +22,7 @@ export class User extends BaseApplicationEntity {
 
   @Column({ type: 'enum', enum: GenderEnum, nullable: true })
   gender: GenderEnum;
+
+  @Column({ nullable: true })
+  refreshToken: string;
 }
