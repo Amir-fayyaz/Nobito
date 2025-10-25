@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function Swagger(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('barbery api')
+    .setTitle('ali-baba api')
     .setVersion('1.0.0')
     .addBearerAuth()
     .addSecurityRequirements('bearer')
