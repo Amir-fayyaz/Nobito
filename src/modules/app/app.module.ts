@@ -13,9 +13,9 @@ import { AppController } from './app.controller';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfig,
     }),
-    AuthModule,
-    RedisModule.forRootAsync(),
     AppCacheModule,
+    RedisModule.forRootAsync(),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [],
