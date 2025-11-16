@@ -1,4 +1,5 @@
 import { CacheService } from '@common/services/cache.service';
+import { generateOtp } from '@common/utility/generate-otp.utility';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
